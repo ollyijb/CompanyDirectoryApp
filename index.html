@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Company Directory</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!------------------------------ Bootstrap, jQuey, Font Awesome ----------------------------------------->
+    <link rel="stylesheet" id="bootstrap-css" href="libs/plugins/bootstrap/css/bootstrap.min.css">
+    <script src="libs/plugins/jquery/jquery-3.5.1.min.js"></script>
+    <script src="libs/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="libs/plugins/fontawesome/css/font-awesome.min.css">
+    <!------------------------------- Custom StyleSheet ------------------------------------------------------>
+    <link rel="stylesheet" href="libs/css/styles.css">
+</head>
+
+<body>
+    <!-- Nav -->
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <button class="btn btn-primary">
+                <i class="fa fa-search fa-lg"></i>
+            </button>
+
+            <form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+
+            <button class="btn btn-primary">
+                <i class="fa fa-plus fa-lg"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Test Area  -->
+    <p id="data"></p>
+
+    <!-------------- Advanced Search Modal ----------->
+
+
+    <!-------------- Create New Modal ----------->
+
+
+    <!-- Team -->
+    <section id="team" class="pb-5">
+        <div class="container">
+            <h5 class="section-title h1">OUR TEAM</h5>
+            <div id="employeeList" class="row">
+                <!-- Team member -->
+
+
+
+                <!----------------------- Rough Template --------------------------------------->
+
+                <div class="container">
+                    <template id="card-template">
+                        {{#each employees}}
+                        <div class="image-flip col-xs-12 col-sm-6 col-md-4">
+                            <div class="mainflip flip-0">
+                                <div class="frontside">
+                                    <div class="card">
+                                        <div class="card-body text-center">
+                                            <h4 class="card-title">{{name}}</h4>
+                                            <p><img class="img-fluid" src={{imageURL}} alt={{countryImage}}></p>
+                                            <h5 class="card-text">{{department}}</h5>
+                                            <h5 class="card-text">{{location}}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="backside">
+                                    <div class="card">
+                                        <div class="card-body text-center mt-4">
+                                            <h4 class="card-title">{{name}}</h4>
+                                            <p><img class="img-fluid" src={{imageURL}} alt={{countryImage}}></p>
+                                            <h5 class="card-text">{{email}}</h5>
+                                            <h5 class="card-text">{{department}}</h5>
+                                            <h5 class="card-text">{{location}}</h5>
+                                            <div class="d-flex justify-content-between">
+                                                <button class="btn btn-primary">
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </button>
+                                                <button class="btn btn-primary">
+                                                    <i class="fa fa-trash fa-lg"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </template>
+
+
+
+
+                </div>
+    </section>
+    <!-- Team -->
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script src="libs/js/script.js"></script>
+</body>
+
+</html>

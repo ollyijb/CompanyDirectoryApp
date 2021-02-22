@@ -18,16 +18,17 @@
     <!-- Nav -->
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" id="advancedSearchButton">
                 <i class="fa fa-search fa-lg"></i>
             </button>
 
             <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
+                <input class="form-control me-2" name="simpleSearch" type="search" id="simpleSearch"
+                    placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" id="simpleSearchButton" type="submit">Search</button>
             </form>
 
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" id="addNewButton">
                 <i class="fa fa-plus fa-lg"></i>
             </button>
         </div>
@@ -37,9 +38,84 @@
     <p id="data"></p>
 
     <!-------------- Advanced Search Modal ----------->
+    <!-- generate checkboxes for location (optional)-->
+    <!-- generate checkboxes for department (optional) -->
+    <!-- text entry box (optional) -->
+    <!-- Submit button -->
+    <div class="modal" id="advancedSearchModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Detailed Search</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body modalStyle" id="advancedSearchContent">
+                    <form>
 
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-------------- Create New Modal ----------->
+    <!-- Select box with following options -->
+    <!-- Location -->
+    <!-- Department -->
+    <!-- Employee -->
+    <!-- Each option selects a different formgroup to show up and be filled in -->
+    <!-- Save button which creates the new entry in the relevant place in the database -->
+    <div class="modal" id="newEntryModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">New Entry</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body modalStyle" id="newEntryContent">
+                    <select>
+                        <option>Employee</option>
+                        <option>Department</option>
+                        <option>Location</option>
+                    </select>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Display Modal -->
+    <div class="modal" id="contactDisplayModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Contact</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body modalStyle" id="contactDisplayContent">
+                    <form>
+                        <h4 id="contactName"></h4>
+                        <!--<h5 id="contactCountryImage"></h5>-->
+                        <h5 id="contactEmail"></h5>
+                        <h5 id="contactDepartment"></h5>
+                        <h5 id="contactLocation"></h5>
+                        <p><img class="img-fluid" id="contactCountryImage" src="" alt=""></p>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Team -->
@@ -47,24 +123,22 @@
         <div class="container">
             <h5 class="section-title h1">OUR TEAM</h5>
             <div id="employeeList" class="row">
-                <!-- Team member -->
-
-
 
                 <!----------------------- Rough Template --------------------------------------->
 
-                <div class="container">
-                    <template id="card-template">
+                <div class="container contact">
+                    <script id="card-template" type="text/x-handlebars-template">
                         {{#each employees}}
-                        <div class="image-flip col-xs-12 col-sm-6 col-md-4">
+                        <div class="image-flip col-xs-12 col-sm-6 col-md-4" id="{{id}}">
                             <div class="mainflip flip-0">
                                 <div class="frontside">
                                     <div class="card">
                                         <div class="card-body text-center">
-                                            <h4 class="card-title">{{name}}</h4>
-                                            <p><img class="img-fluid" src={{imageURL}} alt={{countryImage}}></p>
-                                            <h5 class="card-text">{{department}}</h5>
-                                            <h5 class="card-text">{{location}}</h5>
+                                            <h4 class="card-title" id="name">{{name}}</h4>
+                                            <p><img class="img-fluid" id="countryImage" src={{imageURL}}
+                                                    alt={{countryImage}}></p>
+                                            <h5 class="card-text" id="department">{{department}}</h5>
+                                            <h5 class="card-text" id="location">{{location}}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -73,16 +147,20 @@
                                         <div class="card-body text-center mt-4">
                                             <h4 class="card-title">{{name}}</h4>
                                             <p><img class="img-fluid" src={{imageURL}} alt={{countryImage}}></p>
-                                            <h5 class="card-text">{{email}}</h5>
+                                            <h5 class="card-text" id="email">{{email}}</h5>
                                             <h5 class="card-text">{{department}}</h5>
                                             <h5 class="card-text">{{location}}</h5>
                                             <div class="d-flex justify-content-between">
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-primary edit" id="editButton">
                                                     <i class="fa fa-pencil fa-lg"></i>
                                                 </button>
-                                                <button class="btn btn-primary">
+                                                <button class="btn btn-primary view viewButton" id="viewButton">
+                                                    <i class="fa fa-eye fa-lg"></i>
+                                                </button>
+                                                <button class="btn btn-primary delete" id="deleteButton">
                                                     <i class="fa fa-trash fa-lg"></i>
                                                 </button>
+
                                             </div>
                                         </div>
                                     </div>
@@ -90,10 +168,7 @@
                             </div>
                         </div>
                         {{/each}}
-                    </template>
-
-
-
+                    </script>
 
                 </div>
     </section>

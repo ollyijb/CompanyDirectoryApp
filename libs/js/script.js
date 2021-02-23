@@ -169,6 +169,14 @@ $('#deleteOfficeButton').click(function () {
         option.value = item;
         select2.append(option);
     });
+    let people = results.map(item => item.name).filter((value, index, self) => self.indexOf(value) === index).sort();
+    let select3 = $('#employeeSelect');
+    people.forEach(function (item) {
+        let option = document.createElement('option');
+        option.innerHTML = item;
+        option.value = item;
+        select3.append(option);
+    });
     $('#deleteOfficeModal').modal();
 });
 
@@ -177,7 +185,10 @@ $('#branch').click(function () {
     $('#branches').focus();
     $('#branches').addClass('focusedInput');
     $('#departments').prop('disabled', true);
-    $('#departments').removeClass('focusedInput');
+    $('#departments').removeClass('focusedInput').prop('selectedIndex', 0);;
+    $('#employeeSelect').prop('disabled', true);
+    $('#employeeSelect').removeClass('focusedInput').prop('selectedIndex', 0);
+    $('#submitDelete').prop('disabled', true);
 });
 
 $('#department').click(function () {
@@ -185,7 +196,29 @@ $('#department').click(function () {
     $('#departments').focus();
     $('#departments').addClass('focusedInput');
     $('#branches').prop('disabled', true);
-    $('#branches').removeClass('focusedInput');
+    $('#branches').removeClass('focusedInput').prop('selectedIndex', 0);;
+    $('#employeeSelect').prop('disabled', true);
+    $('#employeeSelect').removeClass('focusedInput').prop('selectedIndex', 0);
+    $('#submitDelete').prop('disabled', true);
+});
+
+$('#person').click(function () {
+    $('#employeeSelect').prop('disabled', false);
+    $('#employeeSelect').focus();
+    $('#employeeSelect').addClass('focusedInput');
+    $('#branches').prop('disabled', true);
+    $('#branches').removeClass('focusedInput').prop('selectedIndex', 0);
+    $('#departments').prop('disabled', true);
+    $('#departments').removeClass('focusedInput').prop('selectedIndex', 0);
+    $('#submitDelete').prop('disabled', true);
+});
+
+$('#deleteOfficeModalForm select').on('change', function () {
+    if ($('#deleteOfficeModalForm select.focusedInput').val() !== 'Choose...') {
+        $('#submitDelete').prop('disabled', false);
+    } else {
+        $('#submitDelete').prop('disabled', true);
+    }
 });
 
 $('#editButtonModal').click(function () {
@@ -196,13 +229,10 @@ $('.modal').on('hide.bs.modal', function () {
     formDisabler();
     $('.modal-body').scrollTop(0);
     deleteFormResetter();
-    getAll();
 });
 
 const deleteFormResetter = () => {
     $('#deleteOfficeModalForm :input[type=radio]').prop('checked', false);
-    $('#branches').prop('disabled', true);
-    $('#branches').removeClass('focusedInput');
-    $('#departments').prop('disabled', true);
-    $('#departments').removeClass('focusedInput');
+    $('#deleteOfficeModalForm .focusedInput').prop('disabled', true);
+    $('#deleteOfficeModalForm .focusedInput').prop('selectedIndex', 0);
 }

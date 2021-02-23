@@ -82,6 +82,10 @@
                                     id="department">
                                 <label class="form-check-label" for="department">Department</label>
                             </div>
+                            <div class="form-check">
+                                <input class="form-check-input" name="office" type="radio" value="option3" id="person">
+                                <label class="form-check-label" for="person">Employee</label>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="branches">Branches</label>
@@ -93,6 +97,13 @@
                         <div class="form-group">
                             <label for="departments">Departments</label>
                             <select id="departments" class="form-control" disabled>
+                                <option selected>Choose...</option>
+                                <option val=""></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="employeeSelect">Employees</label>
+                            <select id="employeeSelect" class="form-control" disabled>
                                 <option selected>Choose...</option>
                                 <option val=""></option>
                             </select>

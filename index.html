@@ -28,14 +28,14 @@
                 <button class="btn btn-outline-success" id="simpleSearchButton" type="submit">Search</button>
             </form>
 
+            <button class="btn btn-danger" id="deleteOfficeButton">
+                <i class="fa fa-trash fa-lg"></i>
+            </button>
             <button class="btn btn-primary" id="addNewButton">
                 <i class="fa fa-plus fa-lg"></i>
             </button>
         </div>
     </nav>
-
-    <!-- Test Area  -->
-    <p id="data"></p>
 
     <!-------------- Advanced Search Modal ----------->
     <!-- generate checkboxes for location (optional)-->
@@ -57,6 +57,52 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!------------ Delete Location or Department Modal ---------------->
+    <div class="modal" id="deleteOfficeModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Branch or Department</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body modalStyle" id="deleteOfficeContent">
+                    <form id="deleteOfficeModalForm">
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" name="office" type="radio" value="option1" id="branch">
+                                <label class="form-check-label" for="branch">Branch</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" name="office" type="radio" value="option2"
+                                    id="department">
+                                <label class="form-check-label" for="department">Department</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="branches">Branches</label>
+                            <select id="branches" class="form-control" disabled>
+                                <option selected>Choose...</option>
+                                <option val=""></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="departments">Departments</label>
+                            <select id="departments" class="form-control" disabled>
+                                <option selected>Choose...</option>
+                                <option val=""></option>
+                            </select>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success" disabled id="submitDelete">Delete</button>
                 </div>
             </div>
         </div>
@@ -95,23 +141,62 @@
     <div class="modal" id="contactDisplayModal">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="custom-header d-flex justify-content-between">
+                    <button class="btn btn-primary edit" id="editButtonModal">
+                        <i class="fa fa-pencil fa-lg"></i>
+                    </button>
                     <h4 class="modal-title">Contact</h4>
+                    <button class="btn btn-primary delete" id="deleteButtonModal">
+                        <i class="fa fa-trash fa-lg"></i>
+                    </button>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body modalStyle" id="contactDisplayContent">
                     <form>
-                        <h4 id="contactName"></h4>
-                        <!--<h5 id="contactCountryImage"></h5>-->
-                        <h5 id="contactEmail"></h5>
-                        <h5 id="contactDepartment"></h5>
-                        <h5 id="contactLocation"></h5>
-                        <p><img class="img-fluid" id="contactCountryImage" src="" alt=""></p>
+                        <fieldset id="editModalForm" disabled>
+                            <div class="form-group row">
+                                <label for="fullName" class="col-4 col-form-label">Full Name:</label>
+                                <div class="col-8">
+                                    <input type="text" id="fullName" class="form-control-plaintext" value="">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="firstName" class="col-4 col-form-label">First Name:</label>
+                                <div class="col-8">
+                                    <input type="text" id="firstName" class="form-control-plaintext" value="">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="lastName" class="col-4 col-form-label">Last Name:</label>
+                                <div class="col-8">
+                                    <input type="text" id="lastName" class="form-control-plaintext" value="">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="contactEmail" class="col-4 col-form-label">Email:</label>
+                                <div class="col-8">
+                                    <input type="email" id="contactEmail" class="form-control-plaintext" value="">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="contactDepartment" class="col-4 col-form-label">Department:</label>
+                                <div class="col-8">
+                                    <input type="text" id="contactDepartment" class="form-control-plaintext" value="">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="contactLocation" class="col-4 col-form-label">Location:</label>
+                                <div class="col-8">
+                                    <input type="text" id="contactLocation" class="form-control-plaintext" value="">
+                                </div>
+                            </div>
+                        </fieldset>
                     </form>
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success" disabled id="saveEdits">Save</button>
                 </div>
             </div>
         </div>

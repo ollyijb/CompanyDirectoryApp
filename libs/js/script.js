@@ -1,7 +1,7 @@
 // Handlebars compiler
 let renderResults = Handlebars.compile($('#card-template').html());
 
-
+// Storing the results of getting All from the database
 let results = [];
 
 // Formats name given back from database
@@ -14,6 +14,8 @@ const nameFormatter = (object) => {
 const employeesFormatter = (object) => {
     let employee = {
         name: nameFormatter(object),
+        firstName: object.firstName,
+        lastName: object.lastName,
         department: object.department,
         location: object.location,
         email: object.email,
@@ -60,6 +62,7 @@ const employeeCard = (object) => {
 }
 
 // Gets all employees from database and renders the handlebars template with them
+// Also sets the id to the index number of the results array of JSON employees
 const getAll = () => {
     $.ajax({
         url: "libs/php/getAll.php",
@@ -106,16 +109,100 @@ $(document).ready(function () {
     getAll();
 });
 
+/************* JQuery helper Functions ***************/
+const modalGenerator = (object) => {
+    $('#fullName').attr('value', object.name);
+    $('#firstName').attr('value', object.firstName);
+    $('#lastName').attr('value', object.lastName);
+    $('#contactEmail').attr('value', object.email);
+    $('#contactDepartment').attr('value', object.department);
+    $('#contactLocation').attr('value', object.location);
+    $('#contactDisplayModal').modal();
+}
+
+const formEditor = () => {
+    $('#editModalForm').prop('disabled', false);
+    $('#editModalForm :input').addClass('form-control').removeClass('form-control-plaintext');
+    $('#saveEdits').prop('disabled', false);
+}
+
+const formDisabler = () => {
+    $('#editModalForm').prop('disabled', true);
+    $('#editModalForm :input').addClass('form-control-plaintext').removeClass('form-control');
+    $('#saveEdits').prop('disabled', true);
+}
+
+/******************** JQuery Events **********************/
 $('#team').on('click', '#viewButton', function () {
     let parents = $(this).parents();
     let topLevel = parents[5];
     let id = topLevel.id;
     let employee = results[id];
-    $('#contactName').html(employee.name);
-    $('#contactEmail').html(employee.email);
-    $('#contactLocation').html(employee.location);
-    $('#contactDepartment').html(employee.department);
-    $('#contactCountryImage').attr('src', employee.imageURL);
-    $('#contactCountryImage').attr('alt', employee.countryImage);
-    $('#contactDisplayModal').modal();
+    modalGenerator(employee);
 });
+
+$('#team').on('click', '#editButton', function () {
+    let parents = $(this).parents();
+    let topLevel = parents[5];
+    let id = topLevel.id;
+    let employee = results[id];
+    modalGenerator(employee);
+    formEditor();
+
+});
+
+$('#deleteOfficeButton').click(function () {
+    let locations = results.map(item => item.location).filter((value, index, self) => self.indexOf(value) === index).sort();
+    console.log(locations);
+    let select = $('#branches');
+    locations.forEach(function (item) {
+        let option = document.createElement('option');
+        option.innerHTML = item;
+        option.value = item;
+        select.append(option);
+    });
+    let departments = results.map(item => item.department).filter((value, index, self) => self.indexOf(value) === index).sort();
+    let select2 = $('#departments');
+    departments.forEach(function (item) {
+        let option = document.createElement('option');
+        option.innerHTML = item;
+        option.value = item;
+        select2.append(option);
+    });
+    $('#deleteOfficeModal').modal();
+});
+
+$('#branch').click(function () {
+    $('#branches').prop('disabled', false);
+    $('#branches').focus();
+    $('#branches').addClass('focusedInput');
+    $('#departments').prop('disabled', true);
+    $('#departments').removeClass('focusedInput');
+});
+
+$('#department').click(function () {
+    $('#departments').prop('disabled', false);
+    $('#departments').focus();
+    $('#departments').addClass('focusedInput');
+    $('#branches').prop('disabled', true);
+    $('#branches').removeClass('focusedInput');
+});
+
+$('#editButtonModal').click(function () {
+    formEditor();
+});
+
+$('.modal').on('hide.bs.modal', function () {
+    formDisabler();
+    $('.modal-body').scrollTop(0);
+    deleteFormResetter();
+    getAll();
+});
+
+const deleteFormResetter = () => {
+    $('#deleteOfficeModalForm :input[type=radio]').prop('checked', false);
+    $('#branches').prop('disabled', true);
+    $('#branches').removeClass('focusedInput');
+    $('#departments').prop('disabled', true);
+    $('#departments').removeClass('focusedInput');
+}

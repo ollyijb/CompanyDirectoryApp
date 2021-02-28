@@ -13,7 +13,8 @@ const nameFormatter = (object) => {
 // Formats employees returned from database
 const employeesFormatter = (object) => {
     let employee = {
-        name: nameFormatter(object),
+        id: object.id,
+        fullName: nameFormatter(object),
         firstName: object.firstName,
         lastName: object.lastName,
         department: object.department,
@@ -64,19 +65,20 @@ const employeeCard = (object) => {
 // Gets all employees from database and renders the handlebars template with them
 // Also sets the id to the index number of the results array of JSON employees
 const getAll = () => {
+    //emptyArray(results);
     $.ajax({
         url: "libs/php/getAll.php",
         type: "POST",
         datatype: "JSON",
         success: function (result) {
             let employeeList = result.data;
-            console.log(result);
+            //console.log(result);
             let employees = [];
             for (i = 0; i < employeeList.length; i++) {
                 let formattedEmployee = employeesFormatter(employeeList[i]);
-                formattedEmployee.id = i;
+                //formattedEmployee.id = i;
                 employees.push(formattedEmployee);
-                console.log(formattedEmployee);
+                //console.log(formattedEmployee);
             }
             results = employees;
             //$('#employeeList').html(renderResults({ employees: employees }));
@@ -107,11 +109,16 @@ $(document).ready(function () {
         }
     });*/
     getAll();
+    //$('#deletesButton').click(function () {
+    //console.log('I exist');
+    //});
+
 });
 
 /************* JQuery helper Functions ***************/
 const modalGenerator = (object) => {
-    $('#fullName').attr('value', object.name);
+    $('#employeeId').attr('value', object.id);
+    $('#fullName').attr('value', object.fullName);
     $('#firstName').attr('value', object.firstName);
     $('#lastName').attr('value', object.lastName);
     $('#contactEmail').attr('value', object.email);
@@ -137,7 +144,7 @@ $('#team').on('click', '#viewButton', function () {
     let parents = $(this).parents();
     let topLevel = parents[5];
     let id = topLevel.id;
-    let employee = results[id];
+    let employee = idFinder(results, id);
     modalGenerator(employee);
 });
 
@@ -145,40 +152,48 @@ $('#team').on('click', '#editButton', function () {
     let parents = $(this).parents();
     let topLevel = parents[5];
     let id = topLevel.id;
-    let employee = results[id];
+    let employee = idFinder(results, id);
     modalGenerator(employee);
     formEditor();
 
 });
 
 $('#deleteOfficeButton').click(function () {
+    //getAll();
+    //console.log(results);
+    //let locations = uniqueItemFinder(results, location);
     let locations = results.map(item => item.location).filter((value, index, self) => self.indexOf(value) === index).sort();
-    console.log(locations);
+    //console.log(locations);
     let select = $('#branches');
-    locations.forEach(function (item) {
+    optionAdder(select, locations);
+    //let departments = uniqueItemFinder(results, department);
+    let departments = results.map(item => item.department).filter((value, index, self) => self.indexOf(value) === index).sort();
+    let select2 = $('#departments');
+    optionAdder(select2, departments);
+    //let people = uniqueItemFinder(results, fullName);
+    let people = results.map(item => item.fullName).filter((value, index, self) => self.indexOf(value) === index).sort();
+    let select3 = $('#employeeSelect');
+    optionAdder(select3, people);
+    $('#deleteOfficeModal').modal();
+});
+
+const optionAdder = (select, array) => {
+    array.forEach(function (item) {
         let option = document.createElement('option');
         option.innerHTML = item;
         option.value = item;
         select.append(option);
     });
-    let departments = results.map(item => item.department).filter((value, index, self) => self.indexOf(value) === index).sort();
-    let select2 = $('#departments');
-    departments.forEach(function (item) {
-        let option = document.createElement('option');
-        option.innerHTML = item;
-        option.value = item;
-        select2.append(option);
-    });
-    let people = results.map(item => item.name).filter((value, index, self) => self.indexOf(value) === index).sort();
-    let select3 = $('#employeeSelect');
-    people.forEach(function (item) {
-        let option = document.createElement('option');
-        option.innerHTML = item;
-        option.value = item;
-        select3.append(option);
-    });
-    $('#deleteOfficeModal').modal();
-});
+}
+
+const uniqueItemFinder = (array, property) => {
+    let sortedArray = array.map(item => item.property).filter((value, index, self) => self.indexOf(value) === index).sort();
+    return sortedArray;
+}
+
+const emptyArray = (array) => {
+    array.length = 0;
+}
 
 $('#branch').click(function () {
     $('#branches').prop('disabled', false);
@@ -236,3 +251,30 @@ const deleteFormResetter = () => {
     $('#deleteOfficeModalForm .focusedInput').prop('disabled', true);
     $('#deleteOfficeModalForm .focusedInput').prop('selectedIndex', 0);
 }
+
+const idFinder = (array, id) => {
+    let found = array.filter(obj => {
+        return obj.id === id;
+
+    });
+    //console.log(found);
+    return found[0];
+}
+
+/*$('#saveEdits').click(function () {
+    console.log($('#formTest'));
+    $.ajax({
+        type: 'POST',
+        url: "libs/php/test.php",
+        data: $('#formTest').serialize(),
+        success: function (res) {
+            console.log(res);
+            alert('sent');
+            $('.modal').modal('hide');
+        },
+        error: function (err) {
+            alert(err);
+        }
+    });
+
+});*/

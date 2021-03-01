@@ -17,11 +17,21 @@ const employeesFormatter = (object) => {
         fullName: nameFormatter(object),
         firstName: object.firstName,
         lastName: object.lastName,
+        departmentId: object.departmentID,
         department: object.department,
+        locationId: object.locationID,
         location: object.location,
         email: object.email,
         imageURL: countryImageFinder(object),
-        countryImage: `${object.location} image`
+        countryImage: `${object.location} image`,
+        locationObj: {
+            id: object.locationID,
+            location: object.location
+        },
+        departmentObj: {
+            id: object.departmentID,
+            department: object.department
+        }
     };
     return employee;
 }
@@ -78,7 +88,7 @@ const getAll = () => {
                 let formattedEmployee = employeesFormatter(employeeList[i]);
                 //formattedEmployee.id = i;
                 employees.push(formattedEmployee);
-                //console.log(formattedEmployee);
+                console.log(formattedEmployee);
             }
             results = employees;
             //$('#employeeList').html(renderResults({ employees: employees }));
@@ -153,29 +163,66 @@ $('#team').on('click', '#editButton', function () {
     let topLevel = parents[5];
     let id = topLevel.id;
     let employee = idFinder(results, id);
+    /* let locations = Array.from(new Set(results.map(s => s.locationObj.location))).sort().map(location => {
+         return {
+             location: location,
+             id: results.find(s => s.locationObj.location === location).locationObj.id
+         };
+     });*/
+    //let departments = uniqueDepartmentPairs(results);
+    //optionAdderWithID($('.locationSelect'), departments, 'department');
     modalGenerator(employee);
     formEditor();
 
 });
 
+const uniqueLocationPairs = (array) => {
+    let results = Array.from(new Set(array.map(s => s.locationObj.location))).sort().map(location => {
+        return {
+            location: location,
+            id: array.find(s => s.locationObj.location === location).locationObj.id
+        };
+    });
+    return results;
+}
+
+const uniqueDepartmentPairs = (array) => {
+    let results = Array.from(new Set(array.map(s => s.departmentObj.department))).sort().map(department => {
+        return {
+            department: department,
+            id: array.find(s => s.departmentObj.department === department).departmentObj.id
+        };
+    });
+    return results;
+}
+
 $('#deleteOfficeButton').click(function () {
     //getAll();
     //console.log(results);
-    //let locations = uniqueItemFinder(results, location);
-    let locations = results.map(item => item.location).filter((value, index, self) => self.indexOf(value) === index).sort();
+    let locations = uniqueItemFinder(results, "location");
+    //let locations = results.map(item => item.location).filter((value, index, self) => self.indexOf(value) === index).sort();
     //console.log(locations);
     let select = $('#branches');
     optionAdder(select, locations);
-    //let departments = uniqueItemFinder(results, department);
-    let departments = results.map(item => item.department).filter((value, index, self) => self.indexOf(value) === index).sort();
+    let departments = uniqueItemFinder(results, 'department');
+    //let departments = results.map(item => item.department).filter((value, index, self) => self.indexOf(value) === index).sort();
     let select2 = $('#departments');
     optionAdder(select2, departments);
-    //let people = uniqueItemFinder(results, fullName);
-    let people = results.map(item => item.fullName).filter((value, index, self) => self.indexOf(value) === index).sort();
+    let people = uniqueItemFinder(results, 'fullName');
+    //let people = results.map(item => item.fullName).filter((value, index, self) => self.indexOf(value) === index).sort();
     let select3 = $('#employeeSelect');
     optionAdder(select3, people);
     $('#deleteOfficeModal').modal();
 });
+
+const optionAdderWithID = (select, array, param) => {
+    array.forEach(function (item) {
+        let option = document.createElement('option');
+        option.innerHTML = item[param];
+        option.value = item.id;
+        select.append(option);
+    });
+}
 
 const optionAdder = (select, array) => {
     array.forEach(function (item) {
@@ -187,7 +234,7 @@ const optionAdder = (select, array) => {
 }
 
 const uniqueItemFinder = (array, property) => {
-    let sortedArray = array.map(item => item.property).filter((value, index, self) => self.indexOf(value) === index).sort();
+    let sortedArray = array.map(item => item[property]).filter((value, index, self) => self.indexOf(value) === index).sort();
     return sortedArray;
 }
 

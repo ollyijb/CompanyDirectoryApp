@@ -1,0 +1,24 @@
+Change GetAll function into a promise.
+Tether a generator function to the successful resolution of this promise
+Generator function should fill in all forms and modals so jQuery events are just click handling rather than rendering
+
+Add an edit button which can be used to change departments location, or bring up the person editor modal.
+This modal will include radio buttons and dropdowns like in the delete modal
+
+Link all selects so they have id values for options
+
+Design the add new entry modal
+Have to create a new location before department, due to the database.
+
+Sort out the delete functionality.
+Can't delete location if department and employees are assigned to it.
+Can't delete department with peoples assigned to it.
+Display a message containing the dependants which still remain.
+
+Link up the forms to DB requests handled in various php files.
+
+Structure the script.js file so all functions are at the top sorted alphabetically. Then document.ready stuff, then jQuery events.
+
+Extra styling to make things look nice
+
+(low) Potentially link the rendering of flags up with the database file used in my MapApp.

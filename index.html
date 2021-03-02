@@ -90,22 +90,22 @@
                         <div class="form-group">
                             <label for="branches">Branches</label>
                             <select id="branches" class="form-control" disabled>
-                                <option selected>Choose...</option>
-                                <option val=""></option>
+                                <option class="first" selected>Choose...</option>
+                                <option class="first" name="location" val=""></option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="departments">Departments</label>
                             <select id="departments" class="form-control" disabled>
-                                <option selected>Choose...</option>
-                                <option val=""></option>
+                                <option class="first" selected>Choose...</option>
+                                <option class="first" name="department" val=""></option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="employeeSelect">Employees</label>
                             <select id="employeeSelect" class="form-control" disabled>
-                                <option selected>Choose...</option>
-                                <option val=""></option>
+                                <option class="first" selected>Choose...</option>
+                                <option class="first" name="employee" val=""></option>
                             </select>
                         </div>
                     </form>
@@ -135,9 +135,9 @@
                 </div>
                 <div class="modal-body modalStyle" id="newEntryContent">
                     <select>
-                        <option>Employee</option>
-                        <option>Department</option>
-                        <option>Location</option>
+                        <option class="first">Employee</option>
+                        <option class="first">Department</option>
+                        <option class="first">Location</option>
                     </select>
 
                 </div>
@@ -196,18 +196,23 @@
                             <div class="form-group row">
                                 <label for="contactDepartment" class="col-4 col-form-label">Department:</label>
                                 <div class="col-8">
-                                    <input type="text" id="contactDepartment" name="department"
-                                        class="form-control-plaintext" value="">
-                                    <!--<select class="locationSelect">
-                                        <option name="location" val=""></option>
-                                    </select>-->
+                                    <!--<input type="text" id="contactDepartment" name="department"
+                                        class="form-control-plaintext" value="">-->
+                                    <select class="departmentSelect form-control contactSelect"
+                                        id="contactDepartmentSelect">
+                                        <option class="first" name="department" value=""></option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="contactLocation" class="col-4 col-form-label">Location:</label>
                                 <div class="col-8">
-                                    <input type="text" id="contactLocation" name="location"
-                                        class="form-control-plaintext" value="">
+                                    <!--<input type="text" id="contactLocation" name="location"
+                                        class="form-control-plaintext" value="">-->
+                                    <select class="locationSelect form-control contactSelect"
+                                        id="contactLocationSelect">
+                                        <option class="first" name="location" value=""></option>
+                                    </select>
                                 </div>
                             </div>
                         </fieldset>
@@ -232,7 +237,7 @@
 
                 <!----------------------- Rough Template --------------------------------------->
 
-                <div class="container contact">
+                <div id="handlebars" class="container contact">
                     <script id="card-template" type="text/x-handlebars-template">
                         {{#each employees}}
                         <div class="image-flip col-xs-12 col-sm-6 col-md-4" id="{{id}}">

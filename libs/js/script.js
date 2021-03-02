@@ -88,12 +88,20 @@ const getAll = () => {
                 let formattedEmployee = employeesFormatter(employeeList[i]);
                 //formattedEmployee.id = i;
                 employees.push(formattedEmployee);
-                console.log(formattedEmployee);
+                //console.log(formattedEmployee);
             }
             results = employees;
             //$('#employeeList').html(renderResults({ employees: employees }));
             //$('#employeeList').insertAdjacentHTML('beforeend', (renderResults({ employees: employees })));
             document.getElementById('employeeList').insertAdjacentHTML('beforeend', (renderResults({ employees: employees })));
+            let departments = uniqueDepartmentPairs(results);
+            let locations = uniqueLocationPairs(results);
+            let people = uniqueEmployeePairs(results);
+            optionAdderWithID($('#contactDepartmentSelect'), departments, 'department', 'department');
+            optionAdderWithID($('#departments'), departments, 'department', 'department');
+            optionAdderWithID($('#contactLocationSelect'), locations, 'location', 'location');
+            optionAdderWithID($('#branches'), locations, 'location', 'location');
+            optionAdderWithID($('#employeeSelect'), people, 'fullName', 'fullName');
         }, error: (err) => {
             console.log(err);
         }
@@ -127,13 +135,15 @@ $(document).ready(function () {
 
 /************* JQuery helper Functions ***************/
 const modalGenerator = (object) => {
+    //console.log(object);
     $('#employeeId').attr('value', object.id);
     $('#fullName').attr('value', object.fullName);
     $('#firstName').attr('value', object.firstName);
     $('#lastName').attr('value', object.lastName);
     $('#contactEmail').attr('value', object.email);
-    $('#contactDepartment').attr('value', object.department);
-    $('#contactLocation').attr('value', object.location);
+    document.getElementById("contactDepartmentSelect").value = object.departmentObj.id;
+    document.getElementById("contactLocationSelect").value = object.locationObj.id;
+    //$('#contactLocation').attr('value', object.location);
     $('#contactDisplayModal').modal();
 }
 
@@ -169,8 +179,10 @@ $('#team').on('click', '#editButton', function () {
              id: results.find(s => s.locationObj.location === location).locationObj.id
          };
      });*/
-    //let departments = uniqueDepartmentPairs(results);
-    //optionAdderWithID($('.locationSelect'), departments, 'department');
+    /*     let departments = uniqueDepartmentPairs(results);
+        let locations = uniqueLocationPairs(results);
+        optionAdderWithID($('#contactDepartmentSelect'), departments, 'department');
+        optionAdderWithID($('#contactLocationSelect'), locations, 'location'); */
     modalGenerator(employee);
     formEditor();
 
@@ -181,6 +193,16 @@ const uniqueLocationPairs = (array) => {
         return {
             location: location,
             id: array.find(s => s.locationObj.location === location).locationObj.id
+        };
+    });
+    return results;
+}
+
+const uniqueEmployeePairs = (array) => {
+    let results = Array.from(new Set(array.map(s => s.fullName))).sort().map(fullName => {
+        return {
+            fullName: fullName,
+            id: array.find(s => s.fullName === fullName).id
         };
     });
     return results;
@@ -199,27 +221,28 @@ const uniqueDepartmentPairs = (array) => {
 $('#deleteOfficeButton').click(function () {
     //getAll();
     //console.log(results);
-    let locations = uniqueItemFinder(results, "location");
+    //let locations = uniqueItemFinder(results, "location");
     //let locations = results.map(item => item.location).filter((value, index, self) => self.indexOf(value) === index).sort();
     //console.log(locations);
-    let select = $('#branches');
-    optionAdder(select, locations);
-    let departments = uniqueItemFinder(results, 'department');
+    //let select = $('#branches');
+    //optionAdder(select, locations);
+    //let departments = uniqueItemFinder(results, 'department');
     //let departments = results.map(item => item.department).filter((value, index, self) => self.indexOf(value) === index).sort();
-    let select2 = $('#departments');
-    optionAdder(select2, departments);
-    let people = uniqueItemFinder(results, 'fullName');
+    //let select2 = $('#departments');
+    //optionAdder(select2, departments);
+    //let people = uniqueItemFinder(results, 'fullName');
     //let people = results.map(item => item.fullName).filter((value, index, self) => self.indexOf(value) === index).sort();
-    let select3 = $('#employeeSelect');
-    optionAdder(select3, people);
+    //let select3 = $('#employeeSelect');
+    //optionAdder(select3, people);
     $('#deleteOfficeModal').modal();
 });
 
-const optionAdderWithID = (select, array, param) => {
+const optionAdderWithID = (select, array, param, param2) => {
     array.forEach(function (item) {
         let option = document.createElement('option');
         option.innerHTML = item[param];
         option.value = item.id;
+        option.name = item[param2];
         select.append(option);
     });
 }
@@ -291,6 +314,20 @@ $('.modal').on('hide.bs.modal', function () {
     formDisabler();
     $('.modal-body').scrollTop(0);
     deleteFormResetter();
+    results.splice(0, results.length);
+    console.log(results.length);
+    //$('select .contactSelect').empty();
+    //$('select .form-control option:not(:first)').remove();
+    //$('#branches').empty();
+    //let selectToClear = $('#branches');
+    //selectToClear.find('option:gt(0)').remove();
+    //console.log($('#branches'));
+    //$('#branches option').empty()
+    //   .append('<option selected="selected">Choose...</option>');
+    //console.log($('#branches'));
+    $('select option:not(.first)').remove();
+    $('#employeeList').empty();
+    getAll();
 });
 
 const deleteFormResetter = () => {

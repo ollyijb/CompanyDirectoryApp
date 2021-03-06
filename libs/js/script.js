@@ -135,7 +135,8 @@ const getAll = () => {
             optionAdderWithID($('#contactDepartmentSelect'), departments, 'department', 'department');
             optionAdderWithID($('#departments'), departments, 'department', 'department');
             optionAdderWithID($('#contactLocationSelect'), locations, 'location', 'location');
-            optionAdderWithID($('#branches'), locations, 'location', 'location');
+            //optionAdderWithID($('#branches'), locations, 'location', 'location');
+            optionAdderWithID($('.locationsSelect'), locations, 'location', 'location');
             optionAdderWithID($('#employeeSelect'), people, 'fullName', 'fullName');
             checkboxAdderWithID($('#departmentCheckboxes'), departments, 'department', 'deparment');
             checkboxAdderWithID($('#locationCheckboxes'), locations, 'location', 'location');
@@ -279,6 +280,10 @@ $('#deleteOfficeButton').click(function () {
 
 $('#advancedSearchButton').click(function () {
     $('#advancedSearchModal').modal();
+})
+
+$('#addNewButton').click(function () {
+    $('#newEntryModal').modal();
 })
 
 const optionAdderWithID = (select, array, param, param2) => {

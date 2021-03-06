@@ -43,10 +43,6 @@
     </nav>
 
     <!-------------- Advanced Search Modal ----------->
-    <!-- generate checkboxes for location (optional)-->
-    <!-- generate checkboxes for department (optional) -->
-    <!-- text entry box (optional) -->
-    <!-- Submit button -->
     <div class="modal" id="advancedSearchModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -118,7 +114,7 @@
                         </div>
                         <div class="form-group">
                             <label for="branches">Branches</label>
-                            <select id="branches" class="form-control" disabled>
+                            <select id="branches" class="form-control locationsSelect" disabled>
                                 <option class="first" selected>Choose...</option>
                                 <option class="first" name="location" val=""></option>
                             </select>
@@ -137,12 +133,12 @@
                                 <option class="first" name="employee" val=""></option>
                             </select>
                         </div>
-                    </form>
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-success" disabled id="submitDelete">Delete</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -163,15 +159,54 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body modalStyle" id="newEntryContent">
-                    <select>
+                    <!--<select>
                         <option class="first">Employee</option>
                         <option class="first">Department</option>
                         <option class="first">Location</option>
-                    </select>
+                    </select>-->
+                    <form>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" name="office" type="radio" value="locationNew"
+                                    id="locationNew">
+                                <label class="form-check-label" for="branch">Branch</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" name="office" type="radio" value="departmentNew"
+                                    id="departmentNew">
+                                <label class="form-check-label" for="department">Department</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" name="office" type="radio" value="personNew"
+                                    id="personNew">
+                                <label class="form-check-label" for="person">Employee</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="newLocation">
+                            <label for="locationNewInput">Location Name:</label>
+                            <input id="locationNewInput" class="form-control" type="text" name="location">
+                        </div>
+
+                        <div class="form-group" id="newDepartment">
+                            <label for="deparmentNewInput">Department Name:</label>
+                            <input id="departmentNewInput" class="form-control" type="text" name="department">
+                            <label for="newLocationSelect">Select Location:</label>
+                            <select class="form-control locationsSelect" id="newLocationSelect">
+                                <option class="first" selected>Choose...</option>
+                                <option class="first" name="location" val=""></option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="newPerson">
+
+                        </div>
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+                    </form>
                 </div>
             </div>
         </div>

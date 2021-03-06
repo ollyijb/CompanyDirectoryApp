@@ -22,14 +22,19 @@
                 <i class="fa fa-search fa-lg"></i>
             </button>
 
-            <form class="d-flex">
-                <input class="form-control me-2" name="simpleSearch" type="search" id="simpleSearch"
+            <form class="d-flex col-6">
+                <input class="form-control me-4" name="simpleSearch" type="search" id="simpleSearch"
                     placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" id="simpleSearchButton" type="submit">Search</button>
+                <button class="btn btn-outline-success" id="simpleSearchButton" type="submit">
+                    <i class="fa fa-search fa-lg"></i>
+                </button>
             </form>
 
             <button class="btn btn-danger" id="deleteOfficeButton">
                 <i class="fa fa-trash fa-lg"></i>
+            </button>
+            <button class="btn btn-primary" id="manageOfficeButton">
+                <i class="fa fa-pencil fa-lg"></i>
             </button>
             <button class="btn btn-primary" id="addNewButton">
                 <i class="fa fa-plus fa-lg"></i>
@@ -51,13 +56,37 @@
                 </div>
                 <div class="modal-body modalStyle" id="advancedSearchContent">
                     <form>
+                        <div id="advancedSearchInputDiv" class="form-gruop">
+                            <input class="form-control me-2" name="simpleSearch" type="search" id="advancedSearchInput"
+                                placeholder="Search" aria-label="Search">
+                        </div>
+                        <div id="departmentCheckboxes" class="form-group">
+                            <h5>Departments</h4>
+                                <div class="form-check">
+                                    <input class="form-check-input" name="department" type="checkbox"
+                                        value="alldepartments" id="alldepartments">
+                                    <label class="form-check-label" for="deparment">All departments</label>
+                                </div>
 
-                    </form>
+                        </div>
+                        <div id="locationCheckboxes" class="form-group">
+                            <h5>Locations</h4>
+                                <div class="form-check">
+                                    <input class="form-check-input" name="location" type="checkbox" value="alllocations"
+                                        id="alllocations">
+                                    <label class="form-check-label" for="location">All locations</label>
+                                </div>
+
+                        </div>
+
+
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success" id="searchAdvancedModalButton">Search</button>
                 </div>
+                </form>
             </div>
         </div>
     </div>

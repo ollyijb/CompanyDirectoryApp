@@ -3,6 +3,8 @@ let renderResults = Handlebars.compile($('#card-template').html());
 
 // Storing the results of getting All from the database
 let results = [];
+let locations = [];
+let departments = [];
 
 // Formats name given back from database
 const nameFormatter = (object) => {
@@ -72,6 +74,39 @@ const employeeCard = (object) => {
 
 }
 
+const getDepartments = () => {
+    $.ajax({
+        url: "libs/php/getAllDepartments.php",
+        type: "POST",
+        datatype: "JSON",
+        success: function (result) {
+            let departmentInfo = result.data;
+            //departments.push(departmentInfo);
+            departments = departmentInfo;
+            console.log(departments);
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    });
+}
+
+const getLocations = () => {
+    $.ajax({
+        url: "libs/php/getAllLocations.php",
+        type: "POST",
+        datatype: "JSON",
+        success: function (result) {
+            let locationsInfo = result.data;
+            locations = locationsInfo;
+            console.log(locations);
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    });
+}
+
 // Gets all employees from database and renders the handlebars template with them
 // Also sets the id to the index number of the results array of JSON employees
 const getAll = () => {
@@ -102,6 +137,9 @@ const getAll = () => {
             optionAdderWithID($('#contactLocationSelect'), locations, 'location', 'location');
             optionAdderWithID($('#branches'), locations, 'location', 'location');
             optionAdderWithID($('#employeeSelect'), people, 'fullName', 'fullName');
+            checkboxAdderWithID($('#departmentCheckboxes'), departments, 'department', 'deparment');
+            checkboxAdderWithID($('#locationCheckboxes'), locations, 'location', 'location');
+
         }, error: (err) => {
             console.log(err);
         }
@@ -127,6 +165,8 @@ $(document).ready(function () {
         }
     });*/
     getAll();
+    getDepartments();
+    getLocations();
     //$('#deletesButton').click(function () {
     //console.log('I exist');
     //});
@@ -237,6 +277,10 @@ $('#deleteOfficeButton').click(function () {
     $('#deleteOfficeModal').modal();
 });
 
+$('#advancedSearchButton').click(function () {
+    $('#advancedSearchModal').modal();
+})
+
 const optionAdderWithID = (select, array, param, param2) => {
     array.forEach(function (item) {
         let option = document.createElement('option');
@@ -245,6 +289,51 @@ const optionAdderWithID = (select, array, param, param2) => {
         option.name = item[param2];
         select.append(option);
     });
+}
+
+/*const checkboxAdderWithID = (container, array, param, nameParam) => {
+    array.forEach(function (item) {
+        container.append(
+            $(document.createElement('div')).prop({
+                class: "form-check"
+            })).append(
+                $(document.createElement('input')).prop({
+                    id: item.id,
+                    name: nameParam,
+                    value: item[param],
+                    type: "checkbox",
+                    class: "form-check-input"
+                })
+            ).append(
+                $(document.createElement('label')).prop({
+                    for: nameParam,
+                    class: "form-check-label"
+                }).html(item[param])
+            )
+    });
+}*/
+
+const checkboxAdderWithID = (container, array, param, nameParam) => {
+    array.forEach(function (item) {
+        let newDiv = $(document.createElement('div')).prop({
+            class: "form-check"
+        });
+        container.append(newDiv);
+        newDiv.append(
+            $(document.createElement('input')).prop({
+                id: nameParam + "ID " + item.id,
+                name: nameParam,
+                value: item.id,
+                type: "checkbox",
+                class: "form-check-input generate-check"
+            })
+        ).append(
+            $(document.createElement('label')).prop({
+                for: nameParam,
+                class: "form-check-label generate-check"
+            }).html(item[param])
+        )
+    })
 }
 
 const optionAdder = (select, array) => {
@@ -327,6 +416,7 @@ $('.modal').on('hide.bs.modal', function () {
     //console.log($('#branches'));
     $('select option:not(.first)').remove();
     $('#employeeList').empty();
+    $('.generate-check').remove();
     getAll();
 });
 

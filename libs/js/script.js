@@ -107,6 +107,36 @@ const getLocations = () => {
     });
 }
 
+const getLocationFromDepartmentID = (departmentID) => {
+    $.ajax({
+        url: "libs/php/getLocationFromDepartmentID.php",
+        type: "POST",
+        datatype: "JSON",
+        data: {
+            id: departmentID
+        },
+        success: function (result) {
+            //console.log(result);
+            let locationObj = result.data[0];
+            console.log(locationObj);
+            //$('.dependantInput').attr('value', locationObj.location);
+            renderInput(locationObj);
+            setSelect(locationObj);
+        },
+        error: (err) => {
+            console.log(err)
+        }
+    })
+}
+
+const renderInput = (object) => {
+    $('.dependantInput').attr('value', object.location);
+}
+
+const setSelect = (object) => {
+    document.getElementById("contactLocationSelect").value = object.locationID;
+}
+
 // Gets all employees from database and renders the handlebars template with them
 // Also sets the id to the index number of the results array of JSON employees
 const getAll = () => {
@@ -460,6 +490,7 @@ $('.modal').on('hide.bs.modal', function () {
     //$('#branches option').empty()
     //   .append('<option selected="selected">Choose...</option>');
     //console.log($('#branches'));
+    $('#newContactLocation').attr('value', '');
     $('select option:not(.first)').remove();
     $('#employeeList').empty();
     $('.generate-check').remove();
@@ -492,6 +523,23 @@ const idFinder = (array, id) => {
     //console.log(found);
     return found[0];
 }
+
+$('#newContactDepartmentSelect').change(function () {
+    let id = $('#newContactDepartmentSelect option:selected').val();
+    console.log(id);
+    getLocationFromDepartmentID(id);
+});
+
+$('#contactDepartmentSelect').change(function () {
+    let id = $('#contactDepartmentSelect option:selected').val();
+    getLocationFromDepartmentID(id);
+});
+
+$('.dependantSelect').change(function () {
+    let id = $('.dependantSelect option:selected').val();
+    console.log(id);
+    getLocationFromDepartmentID(id);
+})
 
 $('#manageEmployeeSelect').change(function () {
     //let parents = $(this).parents();

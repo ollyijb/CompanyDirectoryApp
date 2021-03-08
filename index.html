@@ -284,7 +284,8 @@
                             <div class="form-group row">
                                 <label for="newContactDepartment" class="col-4 col-form-label">Department:</label>
                                 <div class="col-8">
-                                    <select class="departmentsSelect form-control contactSelect employees"
+                                    <select
+                                        class="departmentsSelect form-control contactSelect employees first dependantSelect"
                                         id="newContactDepartmentSelect" required disabled>
                                         <option class="first" name="department" value=""></option>
                                     </select>
@@ -293,8 +294,8 @@
                             <div class="form-group row">
                                 <label for="newContactLocation" class="col-4 col-form-label">Location:</label>
                                 <div class="col-8">
-                                    <input type="text" id="newContactLocation" name="location" class="form-control"
-                                        value="" readonly>
+                                    <input type="text" id="newContactLocation" name="location"
+                                        class="form-control  dependantInput" value="" readonly>
                                 </div>
                             </div>
                         </div>
@@ -370,6 +371,8 @@
                                         id="contactLocationSelect" disabled>
                                         <option class="first" name="location" value=""></option>
                                     </select>
+                                    <!--<input type="text" id="contactLocation" name="location"
+                                        class="form-control  dependantInput" value="" readonly>-->
                                 </div>
                             </div>
                         </fieldset>

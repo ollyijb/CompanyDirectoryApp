@@ -83,7 +83,7 @@ const getDepartments = () => {
             let departmentInfo = result.data;
             //departments.push(departmentInfo);
             departments = departmentInfo;
-            console.log(departments);
+            //console.log(departments);
         },
         error: (err) => {
             console.log(err);
@@ -99,7 +99,7 @@ const getLocations = () => {
         success: function (result) {
             let locationsInfo = result.data;
             locations = locationsInfo;
-            console.log(locations);
+            //console.log(locations);
         },
         error: (err) => {
             console.log(err);
@@ -132,12 +132,14 @@ const getAll = () => {
             let departments = uniqueDepartmentPairs(results);
             let locations = uniqueLocationPairs(results);
             let people = uniqueEmployeePairs(results);
-            optionAdderWithID($('#contactDepartmentSelect'), departments, 'department', 'department');
-            optionAdderWithID($('#departments'), departments, 'department', 'department');
-            optionAdderWithID($('#contactLocationSelect'), locations, 'location', 'location');
+            //optionAdderWithID($('#contactDepartmentSelect'), departments, 'department', 'department');
+            //optionAdderWithID($('#departments'), departments, 'department', 'department');
+            //optionAdderWithID($('#contactLocationSelect'), locations, 'location', 'location');
             //optionAdderWithID($('#branches'), locations, 'location', 'location');
             optionAdderWithID($('.locationsSelect'), locations, 'location', 'location');
-            optionAdderWithID($('#employeeSelect'), people, 'fullName', 'fullName');
+            optionAdderWithID($('.departmentsSelect'), departments, 'department', 'department');
+            optionAdderWithID($('.employeesSelect'), people, 'fullName', 'fullName');
+            //optionAdderWithID($('#employeeSelect'), people, 'fullName', 'fullName');
             checkboxAdderWithID($('#departmentCheckboxes'), departments, 'department', 'deparment');
             checkboxAdderWithID($('#locationCheckboxes'), locations, 'location', 'location');
 
@@ -280,11 +282,15 @@ $('#deleteOfficeButton').click(function () {
 
 $('#advancedSearchButton').click(function () {
     $('#advancedSearchModal').modal();
-})
+});
+
+$('#manageOfficeButton').click(function () {
+    $('#manageModal').modal();
+});
 
 $('#addNewButton').click(function () {
     $('#newEntryModal').modal();
-})
+});
 
 const optionAdderWithID = (select, array, param, param2) => {
     array.forEach(function (item) {
@@ -359,7 +365,7 @@ const emptyArray = (array) => {
     array.length = 0;
 }
 
-$('#branch').click(function () {
+/*$('#branch').click(function () {
     $('#branches').prop('disabled', false);
     $('#branches').focus();
     $('#branches').addClass('focusedInput');
@@ -368,9 +374,20 @@ $('#branch').click(function () {
     $('#employeeSelect').prop('disabled', true);
     $('#employeeSelect').removeClass('focusedInput').prop('selectedIndex', 0);
     $('#submitDelete').prop('disabled', true);
+});*/
+
+$('.locationCheck').click(function () {
+    $('.locations').prop('disabled', false);
+    $('.locations').focus();
+    $('.locations').addClass('focusedInput');
+    $('.departments').prop('disabled', true);
+    $('.departments').removeClass('focusedInput').prop('selectedIndex', 0);;
+    $('.employees').prop('disabled', true);
+    $('.employees').removeClass('focusedInput').prop('selectedIndex', 0);
+    $('.submitButton').prop('disabled', true);
 });
 
-$('#department').click(function () {
+/* $('#department').click(function () {
     $('#departments').prop('disabled', false);
     $('#departments').focus();
     $('#departments').addClass('focusedInput');
@@ -379,9 +396,20 @@ $('#department').click(function () {
     $('#employeeSelect').prop('disabled', true);
     $('#employeeSelect').removeClass('focusedInput').prop('selectedIndex', 0);
     $('#submitDelete').prop('disabled', true);
+}); */
+
+$('.departmentCheck').click(function () {
+    $('.departments').prop('disabled', false);
+    $('.departments').focus();
+    $('.departments').addClass('focusedInput');
+    $('.locations').prop('disabled', true);
+    $('.locations').removeClass('focusedInput').prop('selectedIndex', 0);;
+    $('.employees').prop('disabled', true);
+    $('.employees').removeClass('focusedInput').prop('selectedIndex', 0);
+    $('.submitButton').prop('disabled', true);
 });
 
-$('#person').click(function () {
+/* $('#person').click(function () {
     $('#employeeSelect').prop('disabled', false);
     $('#employeeSelect').focus();
     $('#employeeSelect').addClass('focusedInput');
@@ -390,8 +418,20 @@ $('#person').click(function () {
     $('#departments').prop('disabled', true);
     $('#departments').removeClass('focusedInput').prop('selectedIndex', 0);
     $('#submitDelete').prop('disabled', true);
+}); */
+
+$('.personCheck').click(function () {
+    $('.employees').prop('disabled', false);
+    $('.employees').focus();
+    $('.employees').addClass('focusedInput');
+    $('.locations').prop('disabled', true);
+    $('.locations').removeClass('focusedInput').prop('selectedIndex', 0);
+    $('.departments').prop('disabled', true);
+    $('.departments').removeClass('focusedInput').prop('selectedIndex', 0);
+    $('.submitButton').prop('disabled', true);
 });
 
+// Do more functions like this to make the submit buttons work on modals
 $('#deleteOfficeModalForm select').on('change', function () {
     if ($('#deleteOfficeModalForm select.focusedInput').val() !== 'Choose...') {
         $('#submitDelete').prop('disabled', false);
@@ -407,9 +447,10 @@ $('#editButtonModal').click(function () {
 $('.modal').on('hide.bs.modal', function () {
     formDisabler();
     $('.modal-body').scrollTop(0);
-    deleteFormResetter();
+    checkboxFormResetter();
     results.splice(0, results.length);
-    console.log(results.length);
+    //console.log(results.length);
+    //$('.modal').modal('hide');
     //$('select .contactSelect').empty();
     //$('select .form-control option:not(:first)').remove();
     //$('#branches').empty();
@@ -425,10 +466,22 @@ $('.modal').on('hide.bs.modal', function () {
     getAll();
 });
 
-const deleteFormResetter = () => {
+$('#contactDisplayModal').on('hidden.bs.modal', function () {
+    if ($('#manageModal').hasClass('show')) {
+        $('#dismissButton').click();
+    }
+});
+
+/* const deleteFormResetter = () => {
     $('#deleteOfficeModalForm :input[type=radio]').prop('checked', false);
     $('#deleteOfficeModalForm .focusedInput').prop('disabled', true);
     $('#deleteOfficeModalForm .focusedInput').prop('selectedIndex', 0);
+} */
+
+const checkboxFormResetter = () => {
+    $('.resetChecks :input[type=radio]').prop('checked', false);
+    $('.resetChecks .focusedInput').prop('disabled', true);
+    $('.resetChecks .focusedInput').prop('selectedIndex', 0);
 }
 
 const idFinder = (array, id) => {
@@ -439,6 +492,21 @@ const idFinder = (array, id) => {
     //console.log(found);
     return found[0];
 }
+
+$('#manageEmployeeSelect').change(function () {
+    //let parents = $(this).parents();
+    //let topLevel = parents[5];
+    //let id = topLevel.id;
+    let employeeId = $('#manageEmployeeSelect option:selected').val();
+    let employee = idFinder(results, employeeId);
+    //console.log(employeeId);
+    //$('#manageModal').modal('hide');
+    //$('#dismissButton').click();
+    modalGenerator(employee);
+    //$('#dismissButton').click();
+    formEditor();
+    //$('#dismissButton').click();
+});
 
 /*$('#saveEdits').click(function () {
     console.log($('#formTest'));

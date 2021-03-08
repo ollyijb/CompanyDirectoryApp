@@ -88,7 +88,7 @@
     </div>
 
     <!------------ Delete Location or Department Modal ---------------->
-    <div class="modal" id="deleteOfficeModal">
+    <div class="modal resetChecks" id="deleteOfficeModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -99,36 +99,38 @@
                     <form id="deleteOfficeModalForm">
                         <div class="form-group">
                             <div class="form-check">
-                                <input class="form-check-input" name="office" type="radio" value="option1" id="branch">
+                                <input class="form-check-input locationCheck" name="office" type="radio" value="option1"
+                                    id="branch">
                                 <label class="form-check-label" for="branch">Branch</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" name="office" type="radio" value="option2"
-                                    id="department">
+                                <input class="form-check-input departmentCheck" name="office" type="radio"
+                                    value="option2" id="department">
                                 <label class="form-check-label" for="department">Department</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" name="office" type="radio" value="option3" id="person">
+                                <input class="form-check-input personCheck" name="office" type="radio" value="option3"
+                                    id="person">
                                 <label class="form-check-label" for="person">Employee</label>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="branches">Branches</label>
-                            <select id="branches" class="form-control locationsSelect" disabled>
+                            <select id="branches" class="form-control locationsSelect locations" disabled>
                                 <option class="first" selected>Choose...</option>
                                 <option class="first" name="location" val=""></option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="departments">Departments</label>
-                            <select id="departments" class="form-control" disabled>
+                            <select id="departments" class="departmentsSelect form-control departments" disabled>
                                 <option class="first" selected>Choose...</option>
                                 <option class="first" name="department" val=""></option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="employeeSelect">Employees</label>
-                            <select id="employeeSelect" class="form-control" disabled>
+                            <select id="employeeSelect" class="employeesSelect form-control employees" disabled>
                                 <option class="first" selected>Choose...</option>
                                 <option class="first" name="employee" val=""></option>
                             </select>
@@ -137,7 +139,75 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success" disabled id="submitDelete">Delete</button>
+                    <button type="submit" class="btn btn-success submitButton" disabled
+                        id="submitDelete">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-------------- Manage Modal --------------->
+
+    <div class="modal resetChecks" id="manageModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Updater</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body modalStyle" id="manageModalContent">
+                    <form id="manageModalForm">
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input locationCheck" name="office" type="radio"
+                                    value="manageLocation" id="manageLocation">
+                                <label class="form-check-label" for="manageLocation">Location</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input departmentCheck" name="office" type="radio"
+                                    value="manageDepartment" id="manageDepartment">
+                                <label class="form-check-label" for="manageDepartment">Department</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input personCheck" name="office" type="radio"
+                                    value="manageEmployee" id="manageEmployee">
+                                <label class="form-check-label" for="manageEmployee">Employee</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="manageLocationSelect">Location:</label>
+
+                            <select class="locationsSelect form-control contactSelect locations"
+                                id="manageLocationSelect" disabled>
+                                <option class="first" selected>Choose...</option>
+                                <option class="first" name="location" value=""></option>
+                            </select>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="manageDepartmentSelect">Department:</label>
+
+                            <select class="departmentsSelect form-control contactSelect departments"
+                                id="manageDepartmentSelect" disabled>
+                                <option class="first" selected>Choose...</option>
+                                <option class="first" name="department" value=""></option>
+                            </select>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="manageEmployeeSelect">Employees:</label>
+                            <select id="manageEmployeeSelect" class="employeesSelect form-control employees" disabled>
+                                <option class="first" selected>Choose...</option>
+                                <option class="first" name="employee" val=""></option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="dismissButton" type="button" class="btn btn-danger"
+                                data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success submitButton"
+                                id="manageSubmitButton">Update</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -145,13 +215,7 @@
     </div>
 
     <!-------------- Create New Modal ----------->
-    <!-- Select box with following options -->
-    <!-- Location -->
-    <!-- Department -->
-    <!-- Employee -->
-    <!-- Each option selects a different formgroup to show up and be filled in -->
-    <!-- Save button which creates the new entry in the relevant place in the database -->
-    <div class="modal" id="newEntryModal">
+    <div class="modal resetChecks" id="newEntryModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -159,53 +223,86 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body modalStyle" id="newEntryContent">
-                    <!--<select>
-                        <option class="first">Employee</option>
-                        <option class="first">Department</option>
-                        <option class="first">Location</option>
-                    </select>-->
                     <form>
                         <div class="form-group">
                             <div class="form-check">
-                                <input class="form-check-input" name="office" type="radio" value="locationNew"
-                                    id="locationNew">
-                                <label class="form-check-label" for="branch">Branch</label>
+                                <input class="form-check-input locationCheck" name="office" type="radio"
+                                    value="locationNew" id="locationNew">
+                                <label class="form-check-label" for="locationNew">Location</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" name="office" type="radio" value="departmentNew"
-                                    id="departmentNew">
-                                <label class="form-check-label" for="department">Department</label>
+                                <input class="form-check-input departmentCheck" name="office" type="radio"
+                                    value="departmentNew" id="departmentNew">
+                                <label class="form-check-label" for="departmentNew">Department</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" name="office" type="radio" value="personNew"
+                                <input class="form-check-input personCheck" name="office" type="radio" value="personNew"
                                     id="personNew">
-                                <label class="form-check-label" for="person">Employee</label>
+                                <label class="form-check-label" for="personNew">Employee</label>
                             </div>
                         </div>
 
                         <div class="form-group" id="newLocation">
                             <label for="locationNewInput">Location Name:</label>
-                            <input id="locationNewInput" class="form-control" type="text" name="location">
+                            <input id="locationNewInput" class="form-control locations" type="text" name="location"
+                                disabled>
                         </div>
 
                         <div class="form-group" id="newDepartment">
                             <label for="deparmentNewInput">Department Name:</label>
-                            <input id="departmentNewInput" class="form-control" type="text" name="department">
+                            <input id="departmentNewInput" class="form-control departments" type="text"
+                                name="department" disabled>
                             <label for="newLocationSelect">Select Location:</label>
-                            <select class="form-control locationsSelect" id="newLocationSelect">
+                            <select class="form-control locationsSelect departments" id="newLocationSelect" disabled>
                                 <option class="first" selected>Choose...</option>
                                 <option class="first" name="location" val=""></option>
                             </select>
                         </div>
 
                         <div class="form-group" id="newPerson">
-
+                            <div class="form-group row employees">
+                                <label for="newFirstName" class="col-4 col-form-label">First Name:</label>
+                                <div class="col-8">
+                                    <input type="text" id="newFirstName" name="firstName" class="form-control employees"
+                                        value="" required disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="newLastName" class="col-4 col-form-label">Last Name:</label>
+                                <div class="col-8">
+                                    <input type="text" id="newLastName" name="lastName" class="form-control employees"
+                                        value="" required disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="newContactEmail" class="col-4 col-form-label">Email:</label>
+                                <div class="col-8">
+                                    <input type="email" id="newContactEmail" name="email" class="form-control employees"
+                                        value="" required disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="newContactDepartment" class="col-4 col-form-label">Department:</label>
+                                <div class="col-8">
+                                    <select class="departmentsSelect form-control contactSelect employees"
+                                        id="newContactDepartmentSelect" required disabled>
+                                        <option class="first" name="department" value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="newContactLocation" class="col-4 col-form-label">Location:</label>
+                                <div class="col-8">
+                                    <input type="text" id="newContactLocation" name="location" class="form-control"
+                                        value="" readonly>
+                                </div>
+                            </div>
                         </div>
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-
+                    <button type="submit" class="btn btn-primary" id="newSubmitButton">Submit</button>
                     </form>
                 </div>
             </div>
@@ -260,9 +357,7 @@
                             <div class="form-group row">
                                 <label for="contactDepartment" class="col-4 col-form-label">Department:</label>
                                 <div class="col-8">
-                                    <!--<input type="text" id="contactDepartment" name="department"
-                                        class="form-control-plaintext" value="">-->
-                                    <select class="departmentSelect form-control contactSelect"
+                                    <select class="departmentsSelect form-control contactSelect"
                                         id="contactDepartmentSelect">
                                         <option class="first" name="department" value=""></option>
                                     </select>
@@ -271,10 +366,8 @@
                             <div class="form-group row">
                                 <label for="contactLocation" class="col-4 col-form-label">Location:</label>
                                 <div class="col-8">
-                                    <!--<input type="text" id="contactLocation" name="location"
-                                        class="form-control-plaintext" value="">-->
-                                    <select class="locationSelect form-control contactSelect"
-                                        id="contactLocationSelect">
+                                    <select class="locationsSelect form-control contactSelect"
+                                        id="contactLocationSelect" disabled>
                                         <option class="first" name="location" value=""></option>
                                     </select>
                                 </div>

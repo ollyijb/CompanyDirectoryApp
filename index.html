@@ -22,13 +22,13 @@
                 <i class="fa fa-search fa-lg"></i>
             </button>
 
-            <form class="d-flex col-6">
+            <div class="d-flex col-6" id="simpleForm">
                 <input class="form-control me-4" name="simpleSearch" type="search" id="simpleSearch"
                     placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success" id="simpleSearchButton" type="submit">
                     <i class="fa fa-search fa-lg"></i>
                 </button>
-            </form>
+            </div>
 
             <button class="btn btn-danger" id="deleteOfficeButton">
                 <i class="fa fa-trash fa-lg"></i>
@@ -101,7 +101,7 @@
                             <div class="form-check">
                                 <input class="form-check-input locationCheck" name="office" type="radio" value="option1"
                                     id="branch">
-                                <label class="form-check-label" for="branch">Branch</label>
+                                <label class="form-check-label" for="branch">Location</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input departmentCheck" name="office" type="radio"
@@ -115,7 +115,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="branches">Branches</label>
+                            <label for="branches">Locations</label>
                             <select id="branches" class="form-control locationsSelect locations" disabled>
                                 <option class="first" selected>Choose...</option>
                                 <option class="first" name="location" val=""></option>
@@ -158,7 +158,7 @@
                 </div>
                 <div class="modal-body modalStyle" id="manageModalContent">
                     <form id="manageModalForm">
-                        <div class="form-group">
+                        <div class="form-group" id="manageChecks">
                             <div class="form-check">
                                 <input class="form-check-input locationCheck" name="office" type="radio"
                                     value="manageLocation" id="manageLocation">
@@ -179,12 +179,18 @@
                             <label for="manageLocationSelect">Location:</label>
 
                             <select class="locationsSelect form-control contactSelect locations"
-                                id="manageLocationSelect" disabled>
+                                id="manageLocationSelect" disabled required>
                                 <option class="first" selected>Choose...</option>
                                 <option class="first" name="location" value=""></option>
                             </select>
-
                         </div>
+                        <div class="form-group">
+                            <label for="updateLocationName">New Location Name:</label>
+                            <input id="updateLocationName" type="text" name="locationName" class="form-control "
+                                disabled required>
+                        </div>
+
+
                         <div class="form-group">
                             <label for="manageDepartmentSelect">Department:</label>
 
@@ -196,6 +202,19 @@
 
                         </div>
                         <div class="form-group">
+                            <label for="editDepartmentName">Change Department Name (optional):</label>
+                            <input id="editDepartmentName" class="form-control" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="changeLocationSelect">Choose Location:</label>
+
+                            <select class="locationsSelect form-control contactSelect" id="changeLocationSelect"
+                                disabled>
+                                <option class="first" selected>Choose...</option>
+                                <option class="first" name="location" value=""></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="manageEmployeeSelect">Employees:</label>
                             <select id="manageEmployeeSelect" class="employeesSelect form-control employees" disabled>
                                 <option class="first" selected>Choose...</option>
@@ -205,8 +224,8 @@
                         <div class="modal-footer">
                             <button id="dismissButton" type="button" class="btn btn-danger"
                                 data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success submitButton"
-                                id="manageSubmitButton">Update</button>
+                            <button type="submit" class="btn btn-success" id="manageSubmitButton"
+                                disabled>Update</button>
                         </div>
                     </form>
                 </div>
@@ -244,49 +263,50 @@
 
                         <div class="form-group" id="newLocation">
                             <label for="locationNewInput">Location Name:</label>
-                            <input id="locationNewInput" class="form-control locations" type="text" name="location"
-                                disabled>
+                            <input id="locationNewInput" class="form-control locations inputClear" type="text"
+                                name="location" disabled>
                         </div>
 
                         <div class="form-group" id="newDepartment">
                             <label for="deparmentNewInput">Department Name:</label>
-                            <input id="departmentNewInput" class="form-control departments" type="text"
+                            <input id="departmentNewInput" class="form-control departments inputClear" type="text"
                                 name="department" disabled>
                             <label for="newLocationSelect">Select Location:</label>
-                            <select class="form-control locationsSelect departments" id="newLocationSelect" disabled>
+                            <select class="form-control locationsSelect selectBeginning" id="newLocationSelect"
+                                disabled>
                                 <option class="first" selected>Choose...</option>
                                 <option class="first" name="location" val=""></option>
                             </select>
                         </div>
 
                         <div class="form-group" id="newPerson">
-                            <div class="form-group row employees">
-                                <label for="newFirstName" class="col-4 col-form-label">First Name:</label>
+                            <div class="form-group row">
+                                <label for="newFirstName" class="col-4 col-form-label e">First Name:</label>
                                 <div class="col-8">
-                                    <input type="text" id="newFirstName" name="firstName" class="form-control employees"
-                                        value="" required disabled>
+                                    <input type="text" id="newFirstName" name="firstName"
+                                        class="form-control employees inputClear" value="" disabled>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="newLastName" class="col-4 col-form-label">Last Name:</label>
                                 <div class="col-8">
-                                    <input type="text" id="newLastName" name="lastName" class="form-control employees"
-                                        value="" required disabled>
+                                    <input type="text" id="newLastName" name="lastName" class="form-control inputClear"
+                                        value="" disabled>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="newContactEmail" class="col-4 col-form-label">Email:</label>
                                 <div class="col-8">
-                                    <input type="email" id="newContactEmail" name="email" class="form-control employees"
-                                        value="" required disabled>
+                                    <input type="email" id="newContactEmail" name="email"
+                                        class="form-control inputClear" value="" disabled>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="newContactDepartment" class="col-4 col-form-label">Department:</label>
+                                <label for="newContactDepartmentSelect" class="col-4 col-form-label">Department:</label>
                                 <div class="col-8">
                                     <select
-                                        class="departmentsSelect form-control contactSelect employees first dependantSelect"
-                                        id="newContactDepartmentSelect" required disabled>
+                                        class="departmentsSelect form-control contactSelect first dependantSelect selectBeginning"
+                                        id="newContactDepartmentSelect" disabled>
                                         <option class="first" name="department" value=""></option>
                                     </select>
                                 </div>
@@ -303,7 +323,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" id="newSubmitButton">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="newSubmitButton" disabled>Submit</button>
                     </form>
                 </div>
             </div>

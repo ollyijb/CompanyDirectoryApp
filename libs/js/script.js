@@ -12,6 +12,36 @@ const nameFormatter = (object) => {
     return nameString;
 }
 
+const getAllContainingSearch = (searchTerm) => {
+    $.ajax({
+        url: "libs/php/getAllFromSearch.php",
+        type: "POST",
+        datatype: "JSON",
+        data: {
+            searchTerm: searchTerm
+        },
+        success: function (result) {
+            console.log(result);
+            //sresults.splice(0, results.length);
+            let employeeList = result.data;
+            //console.log(result);
+            let employees = [];
+            for (i = 0; i < employeeList.length; i++) {
+                let formattedEmployee = employeesFormatter(employeeList[i]);
+                //formattedEmployee.id = i;
+                employees.push(formattedEmployee);
+                //console.log(formattedEmployee);
+            }
+            $('#employeeList').empty();
+            results = employees;
+            document.getElementById('employeeList').insertAdjacentHTML('beforeend', (renderResults({ employees: employees })));
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    });
+}
+
 // Formats employees returned from database
 const employeesFormatter = (object) => {
     let employee = {
@@ -118,7 +148,7 @@ const getLocationFromDepartmentID = (departmentID) => {
         success: function (result) {
             //console.log(result);
             let locationObj = result.data[0];
-            console.log(locationObj);
+            //console.log(locationObj);
             //$('.dependantInput').attr('value', locationObj.location);
             renderInput(locationObj);
             setSelect(locationObj);
@@ -494,6 +524,8 @@ $('.modal').on('hide.bs.modal', function () {
     $('select option:not(.first)').remove();
     $('#employeeList').empty();
     $('.generate-check').remove();
+    $('#simpleSearch').val(null);
+    $(document).scrollTop(0);
     getAll();
 });
 
@@ -526,7 +558,7 @@ const idFinder = (array, id) => {
 
 $('#newContactDepartmentSelect').change(function () {
     let id = $('#newContactDepartmentSelect option:selected').val();
-    console.log(id);
+    // console.log(id);
     getLocationFromDepartmentID(id);
 });
 
@@ -537,7 +569,7 @@ $('#contactDepartmentSelect').change(function () {
 
 $('.dependantSelect').change(function () {
     let id = $('.dependantSelect option:selected').val();
-    console.log(id);
+    //console.log(id);
     getLocationFromDepartmentID(id);
 })
 
@@ -554,6 +586,66 @@ $('#manageEmployeeSelect').change(function () {
     //$('#dismissButton').click();
     formEditor();
     //$('#dismissButton').click();
+});
+
+$('#manageLocationSelect').change(function () {
+    $('#updateLocationName').prop('disabled', false).focus();
+    $('#updateLocationName').keyup(function () {
+        $('#manageSubmitButton').prop('disabled', false);
+    });
+});
+
+$('#manageDepartmentSelect').change(function () {
+    $('#editDepartmentName').prop('disabled', false);
+    $('#changeLocationSelect').prop('disabled', false).focus();
+    $('#changeLocationSelect').change(function () {
+        $('#manageSubmitButton').prop('disabled', false);
+    });
+});
+
+$('#manageModal .form-check-input').click(function () {
+    $('#manageSubmitButton').prop('disabled', true);
+});
+
+$('#manageModal .form-check-input').click(function () {
+    $('#manageSubmitButton').prop('disabled', true);
+});
+
+$('#locationNewInput').keyup(function () {
+    $('#newSubmitButton').prop('disabled', false);
+});
+
+$('#newEntryModal .form-check-input').click(function () {
+    $('#newSubmitButton').prop('disabled', true);
+    $('#newEntryModal input.inputClear').val(null);
+    $('#newEntryModal select.selectBeginning').prop('selectedIndex', 0);
+    $('#newEntryModal input.dependantInput').trigger(':reset');
+});
+
+$('#departmentNewInput').keyup(function () {
+    $('#newLocationSelect').prop('disabled', false);
+    $('#newLocationSelect').change(function () {
+        $('#newSubmitButton').prop('disabled', false);
+    });
+});
+
+$('#newFirstName').keyup(function () {
+    $('#newLastName').prop('disabled', false);
+    $('#newLastName').keyup(function () {
+        $('#newContactEmail').prop('disabled', false);
+        $('#newContactEmail').keyup(function () {
+            $('#newContactDepartmentSelect').prop('disabled', false);
+            $('#newContactDepartmentSelect').change(function () {
+                $('#newSubmitButton').prop('disabled', false);
+            });
+        });
+    });
+});
+
+$('#simpleSearchButton').click(function () {
+    console.log($('#simpleSearch').val());
+    let searchTerm = $('#simpleSearch').val();
+    getAllContainingSearch(searchTerm);
 });
 
 /*$('#saveEdits').click(function () {

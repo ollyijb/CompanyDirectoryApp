@@ -42,6 +42,160 @@ const getAllContainingSearch = (searchTerm) => {
     });
 }
 
+const addNewLocation = () => {
+    $.ajax({
+        url: 'libs/php/addNewLocation.php',
+        type: 'POST',
+        datatype: 'JSON',
+        data: {
+            locationName: $('#locationNewInput').val()
+        },
+        success: function (result) {
+            alert('New Location Added');
+            $('#newEntryModal .btn-danger').click();
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    })
+}
+
+const addNewDepartment = () => {
+    $.ajax({
+        url: 'libs/php/addNewDepartment.php',
+        type: 'POST',
+        datatype: 'JSON',
+        data: {
+            departmentName: $('#departmentNewInput').val(),
+            locationID: $('#newLocationSelect option:selected').val()
+        },
+        success: function (result) {
+            alert(`New Department Added`);
+            $('#newEntryModal .btn-danger').click();
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    });
+}
+
+const addNewEmployee = () => {
+    $.ajax({
+        url: 'libs/php/addNewEmployee.php',
+        type: 'POST',
+        datatype: 'JSON',
+        data: {
+            firstName: $('#newFirstName').val(),
+            lastName: $('#newLastName').val(),
+            email: $('#newContactEmail').val(),
+            departmentID: $('#newContactDepartmentSelect').val(),
+            department: $('#newContactDepartmentSelect option:selected').html(),
+            location: $('#newContactLocation').val(),
+            locationID: $('#newContactLocationID').val()
+        },
+        success: function (result) {
+            //console.log(result);
+            alert(`New Employee Added`)
+            $('#newEntryModal .btn-danger').click();
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    });
+}
+
+const deleteDepartment = (id) => {
+    $.ajax({
+        url: 'libs/php/deleteDepartment.php',
+        type: 'POST',
+        datatype: 'JSON',
+        data: {
+            id: id
+        },
+        success: function (result) {
+            console.log(result);
+            if (result.status.code === "200") {
+                alert('Department Deleted');
+                $('#deleteOfficeModal .btn-danger').click();
+            } else {
+                /*let dependants = [];
+                result.data.forEach(function (item) {
+                    let fullName = `${item.firstName} ${item.lastName}`;
+                    alert(fullName);
+                    dependants.push(fullName);
+                });
+                let alertText = [];
+                for (i = 0; i < dependants.length; i++) {
+                    alertText.push(dependants[i] + "\r\n");
+                }
+                alert(alertText);*/
+                alert('Employees still work in this department. Please move them before deleting this department');
+                $('#deleteOfficeModal .btn-danger').click();
+            }
+
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    });
+}
+
+const deleteLocation = (id) => {
+    $.ajax({
+        url: 'libs/php/deleteLocation.php',
+        type: 'POST',
+        datatype: 'JSON',
+        data: {
+            id: id
+        },
+        success: function (result) {
+            console.log(result);
+            if (result.status.code === "200") {
+                alert('Location Deleted');
+                $('#deleteOfficeModal .btn-danger').click();
+            } else {
+                /*let dependants = [];
+                result.data.forEach(function (item) {
+                    let fullName = `${item.firstName} ${item.lastName}`;
+                    alert(fullName);
+                    dependants.push(fullName);
+                });
+                let alertText = [];
+                for (i = 0; i < dependants.length; i++) {
+                    alertText.push(dependants[i] + "\r\n");
+                }
+                alert(alertText);*/
+                alert('This Location still has Departments assigned to it. Please move them before deleting this location');
+                $('#deleteOfficeModal .btn-danger').click();
+            }
+
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    });
+}
+
+const deleteEmployee = (id) => {
+    $.ajax({
+        url: 'libs/php/deleteEmployee.php',
+        type: 'POST',
+        datatype: 'JSON',
+        data: {
+            id: id
+        },
+        success: function (result) {
+            console.log(result);
+            alert('employee deleted');
+            $('#contactDisplayModal .btn-danger').click();
+            $('#deleteOfficeModal .btn-danger').click();
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    });
+}
+
 // Formats employees returned from database
 const employeesFormatter = (object) => {
     let employee = {
@@ -112,6 +266,10 @@ const getDepartments = () => {
         success: function (result) {
             let departmentInfo = result.data;
             //departments.push(departmentInfo);
+            //console.log(departmentInfo);
+            departmentInfo.sort((a, b) => (a.name > b.name) ? 1 : -1);
+            optionAdderWithID($('.departmentsSelect'), departmentInfo, 'name', 'name');
+            checkboxAdderWithID($('#departmentCheckboxes'), departmentInfo, 'name', 'department');
             departments = departmentInfo;
             //console.log(departments);
         },
@@ -128,6 +286,12 @@ const getLocations = () => {
         datatype: "JSON",
         success: function (result) {
             let locationsInfo = result.data;
+            //let locations = uniqueLocationPairs(results);
+            //console.log(locationsInfo);
+            locationsInfo.sort((a, b) => (a.name > b.name) ? 1 : -1);
+            //console.log(locationsInfo);
+            optionAdderWithID($('.locationsSelect'), locationsInfo, 'name', 'name');
+            checkboxAdderWithID($('#locationCheckboxes'), locationsInfo, 'name', 'location');
             locations = locationsInfo;
             //console.log(locations);
         },
@@ -161,6 +325,7 @@ const getLocationFromDepartmentID = (departmentID) => {
 
 const renderInput = (object) => {
     $('.dependantInput').attr('value', object.location);
+    $('.dependantInputHidden').attr('value', object.locationID);
 }
 
 const setSelect = (object) => {
@@ -185,23 +350,29 @@ const getAll = () => {
                 employees.push(formattedEmployee);
                 //console.log(formattedEmployee);
             }
+            //let sortedE = employees.sort((a, b) => (a.lastName > b.lastName) ? 1 : -1);
             results = employees;
             //$('#employeeList').html(renderResults({ employees: employees }));
             //$('#employeeList').insertAdjacentHTML('beforeend', (renderResults({ employees: employees })));
             document.getElementById('employeeList').insertAdjacentHTML('beforeend', (renderResults({ employees: employees })));
-            let departments = uniqueDepartmentPairs(results);
-            let locations = uniqueLocationPairs(results);
+            //let departments = uniqueDepartmentPairs(results);
+            //let locations = uniqueLocationPairs(results);
+            //console.log(locations);
             let people = uniqueEmployeePairs(results);
+            //console.log(people);
+            //console.log(peoples);
+            //let people = peoples.sort((a, b) => (a.fullName > b.fullName) ? 1 : -1);
+            //console.log(people);
             //optionAdderWithID($('#contactDepartmentSelect'), departments, 'department', 'department');
             //optionAdderWithID($('#departments'), departments, 'department', 'department');
             //optionAdderWithID($('#contactLocationSelect'), locations, 'location', 'location');
             //optionAdderWithID($('#branches'), locations, 'location', 'location');
-            optionAdderWithID($('.locationsSelect'), locations, 'location', 'location');
-            optionAdderWithID($('.departmentsSelect'), departments, 'department', 'department');
+            //optionAdderWithID($('.locationsSelect'), locations, 'location', 'location');
+            //optionAdderWithID($('.departmentsSelect'), departments, 'department', 'department');
             optionAdderWithID($('.employeesSelect'), people, 'fullName', 'fullName');
             //optionAdderWithID($('#employeeSelect'), people, 'fullName', 'fullName');
-            checkboxAdderWithID($('#departmentCheckboxes'), departments, 'department', 'deparment');
-            checkboxAdderWithID($('#locationCheckboxes'), locations, 'location', 'location');
+            //checkboxAdderWithID($('#departmentCheckboxes'), departments, 'department', 'deparment');
+            //checkboxAdderWithID($('#locationCheckboxes'), locations, 'location', 'location');
 
         }, error: (err) => {
             console.log(err);
@@ -288,6 +459,30 @@ $('#team').on('click', '#editButton', function () {
         optionAdderWithID($('#contactLocationSelect'), locations, 'location'); */
     modalGenerator(employee);
     formEditor();
+
+});
+
+$('#team').on('click', '#deleteButton', function () {
+    let parents = $(this).parents();
+    let topLevel = parents[5];
+    let id = topLevel.id;
+    let employee = idFinder(results, id);
+    /* let locations = Array.from(new Set(results.map(s => s.locationObj.location))).sort().map(location => {
+         return {
+             location: location,
+             id: results.find(s => s.locationObj.location === location).locationObj.id
+         };
+     });*/
+    /*     let departments = uniqueDepartmentPairs(results);
+        let locations = uniqueLocationPairs(results);
+        optionAdderWithID($('#contactDepartmentSelect'), departments, 'department');
+        optionAdderWithID($('#contactLocationSelect'), locations, 'location'); */
+
+    //alert(`Are you sure you want to delete ${employee.fullName}??`);
+    //deleteEmployee(employee.)
+    $('#warningFullName').html(employee.fullName);
+    $('#deleteWarning').alert();
+    console.log(employee.id);
 
 });
 
@@ -509,6 +704,8 @@ $('.modal').on('hide.bs.modal', function () {
     $('.modal-body').scrollTop(0);
     checkboxFormResetter();
     results.splice(0, results.length);
+    departments.splice(0, departments.length);
+    locations.splice(0, locations.length);
     //console.log(results.length);
     //$('.modal').modal('hide');
     //$('select .contactSelect').empty();
@@ -527,6 +724,8 @@ $('.modal').on('hide.bs.modal', function () {
     $('#simpleSearch').val(null);
     $(document).scrollTop(0);
     getAll();
+    getDepartments();
+    getLocations();
 });
 
 $('#contactDisplayModal').on('hidden.bs.modal', function () {
@@ -647,6 +846,35 @@ $('#simpleSearchButton').click(function () {
     let searchTerm = $('#simpleSearch').val();
     getAllContainingSearch(searchTerm);
 });
+
+$('#newSubmitButton').click(function () {
+    if ($('#personNew').prop("checked")) {
+        addNewEmployee();
+    } else if ($('#departmentNew').prop("checked")) {
+        addNewDepartment();
+    } else if ($('#locationNew').prop("checked")) {
+        addNewLocation();
+    }
+});
+
+$('#deleteButtonModal').click(function () {
+    console.log($('#employeeId').val());
+    deleteEmployee($('#employeeId').val());
+});
+
+$('#submitDelete').click(function () {
+    //deleteEmployee($('#employeeSelect option:selected').val());
+    //console.log($('#employeeSelect option:selected').val());
+    if ($('#person').prop("checked")) {
+        deleteEmployee($('#employeeSelect option:selected').val());
+    } else if ($('#department').prop("checked")) {
+        deleteDepartment($('#departments option:selected').val());
+    } else if ($('#deleteLocation').prop("checked")) {
+        console.log($('#branches option:selected').val());
+        deleteLocation($('#branches option:selected').val());
+        //deleteLocation($('#branches option:selected').val());
+    }
+})
 
 /*$('#saveEdits').click(function () {
     console.log($('#formTest'));

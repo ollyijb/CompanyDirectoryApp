@@ -100,10 +100,10 @@
                         <div class="form-group">
                             <div class="form-check">
                                 <input class="form-check-input locationCheck" name="office" type="radio" value="option1"
-                                    id="branch">
-                                <label class="form-check-label" for="branch">Location</label>
+                                    id="deleteLocation">
+                                <label class="form-check-label" for="deleteLocation">Location</label>
                             </div>
-                            <div class="form-check">
+                            <div class=" form-check">
                                 <input class="form-check-input departmentCheck" name="office" type="radio"
                                     value="option2" id="department">
                                 <label class="form-check-label" for="department">Department</label>
@@ -139,7 +139,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success submitButton" disabled
+                    <button type="button" class="btn btn-success submitButton" disabled
                         id="submitDelete">Delete</button>
                     </form>
                 </div>
@@ -314,6 +314,8 @@
                             <div class="form-group row">
                                 <label for="newContactLocation" class="col-4 col-form-label">Location:</label>
                                 <div class="col-8">
+                                    <input type="hidden" id="newContactLocationID" name="locationID"
+                                        class="dependantInputHidden" value="">
                                     <input type="text" id="newContactLocation" name="location"
                                         class="form-control  dependantInput" value="" readonly>
                                 </div>
@@ -323,7 +325,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" id="newSubmitButton" disabled>Submit</button>
+                    <button type="button" class="btn btn-primary" id="newSubmitButton" disabled>Submit</button>
                     </form>
                 </div>
             </div>
@@ -437,7 +439,7 @@
                                     <div class="card">
                                         <div class="card-body text-center mt-4">
                                             <h4 class="card-title">{{fullName}}</h4>
-                                            <p><img class="img-fluid" src={{imageURL}} alt={{countryImage}}></p>
+                                            <p><img class="img-fluid" src={{imageURL}} alt={{countryImage}} height="32" width="32"></p>
                                             <h5 class="card-text" id="email">{{email}}</h5>
                                             <h5 class="card-text">{{department}}</h5>
                                             <h5 class="card-text">{{location}}</h5>
@@ -464,6 +466,13 @@
                 </div>
     </section>
     <!-- Team -->
+    <!--------------------- Turn commented out into a warning modal for deleting people ------------------------>
+    <!--<div id="deleteWarning" class="alert alert-warning" role="alert">
+        <strong>Warning!</strong>
+        <p>Are you sure you want to delete <span id="warningFullName"></span>?</p>
+        <button type="button" class="btn btn-primary" data-dismiss="alert">No</button>
+        <button type="button" class="btn btn-danger" id="alertDeleteButton" data-dismiss="alert">Delete</button>
+    </div>-->
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
     <script src="libs/js/script.js"></script>
 </body>

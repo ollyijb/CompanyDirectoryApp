@@ -32,9 +32,13 @@
 
 	}	
 
+	// Making sure the user names are capitalized before going to the database - Important for the sorting in my html/js
+	$firstName = ucfirst($_POST['firstName']);
+	$lastName = ucfirst($_POST['lastName']);
+
 	// $_REQUEST used for development / debugging. Remember to cange to $_POST for production
 
-	$query = 'INSERT INTO personnel (firstName, lastName, email, departmentID) VALUES("' . $_POST['firstName'] . '","' . $_POST["lastName"] . '","' . $_POST['email'] . '","' . $_POST['departmentID'] . '")';
+	$query = 'INSERT INTO personnel (firstName, lastName, email, departmentID) VALUES("' . $firstName . '","' . $lastName . '","' . $_POST['email'] . '","' . $_POST['departmentID'] . '")';
 
 	$result = $conn->query($query);
 	

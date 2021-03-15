@@ -32,9 +32,12 @@
 
 	}	
 
+
+	$departmentName = ucfirst($_POST['departmentName']);
+
 	// $_REQUEST used for development / debugging. Remember to cange to $_POST for production
 
-	$query = 'INSERT INTO department (name, locationID) VALUES("' . $_POST['departmentName'] . '","' . $_POST['locationID'] . '")';
+	$query = 'INSERT INTO department (name, locationID) VALUES("' . $departmentName . '","' . $_POST['locationID'] . '")';
 
 	$result = $conn->query($query);
 	

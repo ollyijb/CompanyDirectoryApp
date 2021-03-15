@@ -35,10 +35,11 @@
     if (count($_POST['departmentName']) < 2) {
         $name = $_POST['originalName'];
     } else {
-        $name = $_POST['departmentName'];
+        $name = ucfirst($_POST['departmentName']);
     }
 
 	// $_REQUEST used for development / debugging. Remember to cange to $_POST for production
+
 
 	$query = 'UPDATE department SET name = "' . $name . '", locationID = "' . $_POST['locationID'] . '" WHERE id = ' . $_POST['id'];
 

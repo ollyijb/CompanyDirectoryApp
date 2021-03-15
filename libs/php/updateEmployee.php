@@ -32,11 +32,12 @@
 
 	}	
 
-	$locationName = ucfirst($_POST['locationName']);
-
 	// $_REQUEST used for development / debugging. Remember to cange to $_POST for production
 
-	$query = 'INSERT INTO location (name) VALUES("' . $locationName . '")';
+    $firstName = ucfirst($_POST['firstName']);
+    $lastName = ucfirst($_POST['lastName']);
+
+	$query = 'UPDATE personnel SET firstName = "' . $firstName . '", lastName = "' . $lastName . '", email = "' . $_POST['email'] . '", departmentID = "' . $_POST['departmentID'] . '" WHERE id = ' . $_POST['id'];
 
 	$result = $conn->query($query);
 	
@@ -64,5 +65,6 @@
 	mysqli_close($conn);
 
 	echo json_encode($output); 
+    //echo json_encode($_POST);
 
 ?>

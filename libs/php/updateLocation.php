@@ -34,7 +34,9 @@
 
 	// $_REQUEST used for development / debugging. Remember to cange to $_POST for production
 
-	$query = 'UPDATE location SET name = "' . $_POST['locationName'] . '" WHERE id = ' . $_POST['id'];
+    $locationName = ucfirst($_POST['locationName']);
+
+	$query = 'UPDATE location SET name = "' . $locationName . '" WHERE id = ' . $_POST['id'];
 
 	$result = $conn->query($query);
 	

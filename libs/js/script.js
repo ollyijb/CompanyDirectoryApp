@@ -196,6 +196,46 @@ const deleteEmployee = (id) => {
     });
 }
 
+const updateLocation = () => {
+    $.ajax({
+        url: 'libs/php/updateLocation',
+        type: 'POST',
+        datatype: 'JSON',
+        data: {
+            id: $('#manageLocationSelect option:selected').val(),
+            locationName: $('#updateLocationName').val()
+        },
+        success: function (result) {
+            console.log(result);
+            $('#manageModal .btn-danger').click();
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    });
+}
+
+const updateDepartment = () => {
+    $.ajax({
+        url: 'libs/php/updateDepartment',
+        type: 'POST',
+        datatype: 'JSON',
+        data: {
+            id: $('#manageDepartmentSelect option:selected').val(),
+            departmentName: $('#editDepartmentName').val(),
+            originalName: $('#manageDepartmentSelect option:selected').html(),
+            locationID: $('#changeLocationSelect option:selected').val()
+        },
+        success: function (result) {
+            console.log(result);
+            $('#manageModal .btn-danger').click();
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    });
+}
+
 // Formats employees returned from database
 const employeesFormatter = (object) => {
     let employee = {
@@ -695,6 +735,10 @@ $('#deleteOfficeModalForm select').on('change', function () {
     }
 });
 
+/* $('#departments').change(function () {
+    console.log($('#departments option:selected').val());
+}) */
+
 $('#editButtonModal').click(function () {
     formEditor();
 });
@@ -855,6 +899,17 @@ $('#newSubmitButton').click(function () {
     } else if ($('#locationNew').prop("checked")) {
         addNewLocation();
     }
+});
+
+$('#manageSubmitButton').click(function () {
+    if ($('#manageLocation').prop("checked")) {
+        updateLocation();
+    } else if ($('#manageDepartment').prop("checked")) {
+        // Update Department
+        updateDepartment();
+    } //else if ($('#locationNew').prop("checked")) {
+    //addNewLocation();
+    //}
 });
 
 $('#deleteButtonModal').click(function () {

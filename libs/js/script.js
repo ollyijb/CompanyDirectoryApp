@@ -12,7 +12,8 @@ const nameFormatter = (object) => {
     return nameString;
 }
 
-/***************** AJAX GETS ***********************/
+/******************************** AJAX GETS **********************************************/
+
 // Gets all employees from database and renders the handlebars template with them
 // Also sets the id to the index number of the results array of JSON employees
 const getAll = () => {
@@ -28,6 +29,7 @@ const getAll = () => {
                 employees.push(formattedEmployee);
             }
             results = employees;
+            // Compiling results with Handlebars
             document.getElementById('employeeList').insertAdjacentHTML('beforeend', (renderResults({ employees: employees })));
             let people = uniqueEmployeePairs(results);
             optionAdderWithID($('.employeesSelect'), people, 'fullName', 'fullName');
@@ -36,6 +38,8 @@ const getAll = () => {
         }
     });
 }
+
+// Gets all Departments & Fills documents Select Department boxes and adds checkboxes
 const getDepartments = () => {
     $.ajax({
         url: "libs/php/getAllDepartments.php",
@@ -54,6 +58,7 @@ const getDepartments = () => {
     });
 }
 
+// Gets all Locations & Fills documents Select Location boxes and adds checkboxes
 const getLocations = () => {
     $.ajax({
         url: "libs/php/getAllLocations.php",
@@ -72,6 +77,7 @@ const getLocations = () => {
     });
 }
 
+// Gets the location from department ID & Sets relevant select options and inputs to it
 const getLocationFromDepartmentID = (departmentID) => {
     $.ajax({
         url: "libs/php/getLocationFromDepartmentID.php",
@@ -90,6 +96,8 @@ const getLocationFromDepartmentID = (departmentID) => {
         }
     })
 }
+
+// Hits the database from simple search box and renders results
 const getAllContainingSearch = (searchTerm) => {
     $.ajax({
         url: "libs/php/getAllFromSearch.php",
@@ -107,6 +115,7 @@ const getAllContainingSearch = (searchTerm) => {
             }
             $('#employeeList').empty();
             results = employees;
+            // Compiling results using handlebars
             document.getElementById('employeeList').insertAdjacentHTML('beforeend', (renderResults({ employees: employees })));
         },
         error: (err) => {
@@ -117,6 +126,7 @@ const getAllContainingSearch = (searchTerm) => {
 
 /****************** AJAX CREATE ************************/
 
+// Adds new Location to Database & Closes New Entry Modal
 const addNewLocation = () => {
     $.ajax({
         url: 'libs/php/addNewLocation.php',
@@ -135,6 +145,7 @@ const addNewLocation = () => {
     })
 }
 
+// Adds new Department to Database & Closes New Entry Modal
 const addNewDepartment = () => {
     $.ajax({
         url: 'libs/php/addNewDepartment.php',
@@ -154,6 +165,7 @@ const addNewDepartment = () => {
     });
 }
 
+// Adds new Employee to Database & Closes New Entry Modal
 const addNewEmployee = () => {
     $.ajax({
         url: 'libs/php/addNewEmployee.php',
@@ -180,6 +192,7 @@ const addNewEmployee = () => {
 
 /******************** AJAX DELETES ******************/
 
+// Deletes Department from an ID if no dependants, alerts user if there are
 const deleteDepartment = (id) => {
     $.ajax({
         url: 'libs/php/deleteDepartment.php',
@@ -203,6 +216,7 @@ const deleteDepartment = (id) => {
     });
 }
 
+// Deletes Location from an ID if no dependants, alerts user if there are
 const deleteLocation = (id) => {
     $.ajax({
         url: 'libs/php/deleteLocation.php',
@@ -226,6 +240,7 @@ const deleteLocation = (id) => {
     });
 }
 
+// Deletes Employee from Database
 const deleteEmployee = (id) => {
     $.ajax({
         url: 'libs/php/deleteEmployee.php',
@@ -247,6 +262,7 @@ const deleteEmployee = (id) => {
 
 /***************** AJAX UPDATES ********************************/
 
+// Updates Location and closes Manage Modal
 const updateLocation = () => {
     $.ajax({
         url: 'libs/php/updateLocation',
@@ -265,6 +281,7 @@ const updateLocation = () => {
     });
 }
 
+// Updates Department and closes Manage Modal
 const updateDepartment = () => {
     $.ajax({
         url: 'libs/php/updateDepartment',
@@ -285,6 +302,7 @@ const updateDepartment = () => {
     });
 }
 
+// Updates Employee and closes Manage Modal
 const updateEmployee = () => {
     $.ajax({
         url: 'libs/php/updateEmployee.php',
@@ -308,6 +326,7 @@ const updateEmployee = () => {
 }
 
 /***************** FUNCTIONS *******************/
+
 // Adds checkboxes to the DOM with ID values, used in advanced searh Modal
 const checkboxAdderWithID = (container, array, param, nameParam) => {
     array.forEach(function (item) {
@@ -389,10 +408,12 @@ const employeesFormatter = (object) => {
     return employee;
 }
 
+// Helper function to clear arrays
 const emptyArray = (array) => {
     array.length = 0;
 }
 
+// Finds an object in an array via id property
 const idFinder = (array, id) => {
     let found = array.filter(obj => {
         return obj.id === id;
@@ -401,6 +422,7 @@ const idFinder = (array, id) => {
     return found[0];
 }
 
+// Renders and opens the contact Display Modal
 const modalGenerator = (object) => {
     $('#employeeId').attr('value', object.id);
     $('#fullName').attr('value', object.fullName);
@@ -412,6 +434,7 @@ const modalGenerator = (object) => {
     $('#contactDisplayModal').modal();
 }
 
+// Fills a Select from an array
 const optionAdder = (select, array) => {
     array.forEach(function (item) {
         let option = document.createElement('option');
@@ -421,6 +444,7 @@ const optionAdder = (select, array) => {
     });
 }
 
+// Fills a Select from an aray with the option value being an id, sets name and display too
 const optionAdderWithID = (select, array, param, param2) => {
     array.forEach(function (item) {
         let option = document.createElement('option');
@@ -431,15 +455,18 @@ const optionAdderWithID = (select, array, param, param2) => {
     });
 }
 
+// Used to Fill locations from departments with classes .dependantInput, .dependantInputHidden
 const renderInput = (object) => {
     $('.dependantInput').attr('value', object.location);
     $('.dependantInputHidden').attr('value', object.locationID);
 }
 
+// Sets which option a Select is showing
 const setSelect = (object) => {
     document.getElementById("contactLocationSelect").value = object.locationID;
 }
 
+// Finds all the unique departments in an array
 const uniqueDepartmentPairs = (array) => {
     let results = Array.from(new Set(array.map(s => s.departmentObj.department))).sort().map(department => {
         return {
@@ -450,6 +477,7 @@ const uniqueDepartmentPairs = (array) => {
     return results;
 }
 
+// Finds all unique employees and matches their name with their id
 const uniqueEmployeePairs = (array) => {
     let results = Array.from(new Set(array.map(s => s.fullName))).sort().map(fullName => {
         return {
@@ -460,11 +488,13 @@ const uniqueEmployeePairs = (array) => {
     return results;
 }
 
+// Sorts an array via property
 const uniqueItemFinder = (array, property) => {
     let sortedArray = array.map(item => item[property]).filter((value, index, self) => self.indexOf(value) === index).sort();
     return sortedArray;
 }
 
+// Finds all the unique locations in an array
 const uniqueLocationPairs = (array) => {
     let results = Array.from(new Set(array.map(s => s.locationObj.location))).sort().map(location => {
         return {
@@ -483,18 +513,22 @@ $(document).ready(function () {
 });
 
 /************* JQuery helper Functions ***************/
+
+// Resets all the checkboxes accross all Forms
 const checkboxFormResetter = () => {
     $('.resetChecks :input[type=radio]').prop('checked', false);
     $('.resetChecks .focusedInput').prop('disabled', true);
     $('.resetChecks .focusedInput').prop('selectedIndex', 0);
 }
 
+// Allows the user to edit inputs
 const formEditor = () => {
     $('#editModalForm').prop('disabled', false);
     $('#editModalForm :input').addClass('form-control').removeClass('form-control-plaintext');
     $('#saveEdits').prop('disabled', false);
 }
 
+// Denies the user ability to edit inputs
 const formDisabler = () => {
     $('#editModalForm').prop('disabled', true);
     $('#editModalForm :input').addClass('form-control-plaintext').removeClass('form-control');
@@ -502,6 +536,10 @@ const formDisabler = () => {
 }
 
 /******************** JQuery Events **********************/
+
+///////////// Contact Display Modal ///////////////////
+
+// Adding View button from template to the DOM
 $('#team').on('click', '#viewButton', function () {
     let parents = $(this).parents();
     let topLevel = parents[5];
@@ -509,7 +547,7 @@ $('#team').on('click', '#viewButton', function () {
     let employee = idFinder(results, id);
     modalGenerator(employee);
 });
-
+// Adding edit button from template to the DOM
 $('#team').on('click', '#editButton', function () {
     let parents = $(this).parents();
     let topLevel = parents[5];
@@ -519,6 +557,7 @@ $('#team').on('click', '#editButton', function () {
     formEditor();
 });
 
+// Adding delete button from template to the DOM
 $('#team').on('click', '#deleteButton', function () {
     let parents = $(this).parents();
     let topLevel = parents[5];
@@ -528,22 +567,187 @@ $('#team').on('click', '#deleteButton', function () {
     //$('#deleteWarning').alert();
 });
 
+// Unlocks the form so it can be edited by the user
+$('#editButtonModal').click(function () {
+    formEditor();
+});
+
+// Deletes the employee clicked on by the user
+$('#deleteButtonModal').click(function () {
+    deleteEmployee($('#employeeId').val());
+});
+
+// Updates the database with user changes to employee
+$('#saveEdits').click(function () {
+    updateEmployee();
+});
+
+//////////////////////////////////// Delete Modal ////////////////////////////////////
+
+// Opens the delete modal when delete button is clicked
 $('#deleteOfficeButton').click(function () {
     $('#deleteOfficeModal').modal();
 });
 
+// Enables the submit button for deleting a location
+$('#deleteOfficeModalForm select').on('change', function () {
+    if ($('#deleteOfficeModalForm select.focusedInput').val() !== 'Choose...') {
+        $('#submitDelete').prop('disabled', false);
+    } else {
+        $('#submitDelete').prop('disabled', true);
+    }
+});
+
+
+// Handles which type of delete is sent to the database
+$('#submitDelete').click(function () {
+    if ($('#person').prop("checked")) {
+        deleteEmployee($('#employeeSelect option:selected').val());
+    } else if ($('#department').prop("checked")) {
+        deleteDepartment($('#departments option:selected').val());
+    } else if ($('#deleteLocation').prop("checked")) {
+        deleteLocation($('#branches option:selected').val());
+    }
+});
+
+///////////////////////// Advanced Search Modal //////////////////////////////
+
+// Opens advanced search modal when advanced search button is clicked
 $('#advancedSearchButton').click(function () {
     $('#advancedSearchModal').modal();
 });
 
+//////////////////////// Manage Modal //////////////////////////////////////
+
+// Opens Manage modal when manage modal button is clicked
 $('#manageOfficeButton').click(function () {
     $('#manageModal').modal();
 });
 
+// Handles what happens when checkboxes are clicked 
+$('#manageModal .form-check-input').click(function () {
+    $('#manageSubmitButton').prop('disabled', true);
+    $('#changeLocationSelect').prop('disabled', true);
+    $('#manageModal input.inputClear').val(null).prop('disabled', true);
+    $('#manageModal select.selectBeginning').prop('selectedIndex', 0);
+    //$('#newEntryModal input.dependantInput').trigger(':reset');
+});
+
+// When employee is selected from dropdown it generates and opens contact display modal to be edited
+$('#manageEmployeeSelect').change(function () {
+    let employeeId = $('#manageEmployeeSelect option:selected').val();
+    let employee = idFinder(results, employeeId);
+    modalGenerator(employee);
+    formEditor();
+});
+
+// Handles how user can update Location
+$('#manageLocationSelect').change(function () {
+    $('#updateLocationName').prop('disabled', false).focus();
+    $('#updateLocationName').keyup(function () {
+        $('#manageSubmitButton').prop('disabled', false);
+    });
+});
+
+// Handles how user can update Department
+$('#manageDepartmentSelect').change(function () {
+    $('#editDepartmentName').prop('disabled', false);
+    $('#changeLocationSelect').prop('disabled', false).focus();
+    $('#changeLocationSelect').change(function () {
+        $('#manageSubmitButton').prop('disabled', false);
+    });
+});
+
+// Ensures submit button is disabled until other inputs are filled by user
+$('#manageModal .form-check-input').click(function () {
+    $('#manageSubmitButton').prop('disabled', true);
+});
+
+// Handles which update type is sent to the Database
+$('#manageSubmitButton').click(function () {
+    if ($('#manageLocation').prop("checked")) {
+        updateLocation();
+    } else if ($('#manageDepartment').prop("checked")) {
+        updateDepartment();
+    }
+});
+
+///////// New Item Modal //////////////
+
+// Opens New Modal when add new button is clicked
 $('#addNewButton').click(function () {
     $('#newEntryModal').modal();
 });
 
+// Handles what happens when checkboxes are clicked 
+$('#newEntryModal .form-check-input').click(function () {
+    $('#newSubmitButton').prop('disabled', true);
+    $('#newLocationSelect').prop('disabled', true);
+    $('#newEntryModal input.inputClear').val(null);
+    $('#newEntryModal select.selectBeginning').prop('selectedIndex', 0);
+    $('#newEntryModal input.dependantInput').trigger(':reset');
+});
+
+// Handles how user can enter New Location Form
+$('#locationNewInput').keyup(function () {
+    $('#newSubmitButton').prop('disabled', false);
+});
+
+// Handles how user can enter New Department Form
+$('#departmentNewInput').keyup(function () {
+    $('#newLocationSelect').prop('disabled', false);
+    $('#newLocationSelect').change(function () {
+        $('#newSubmitButton').prop('disabled', false);
+    });
+});
+
+// Handles how user can enter New Employee Form
+$('#newFirstName').keyup(function () {
+    $('#newLastName').prop('disabled', false);
+    $('#newLastName').keyup(function () {
+        $('#newContactEmail').prop('disabled', false);
+        $('#newContactEmail').keyup(function () {
+            $('#newContactDepartmentSelect').prop('disabled', false);
+            $('#newContactDepartmentSelect').change(function () {
+                $('#newSubmitButton').prop('disabled', false);
+            });
+        });
+    });
+});
+
+// when department selected gets the location 
+$('#newContactDepartmentSelect').change(function () {
+    let id = $('#newContactDepartmentSelect option:selected').val();
+    getLocationFromDepartmentID(id);
+});
+
+// when department selected gets the location 
+$('#contactDepartmentSelect').change(function () {
+    let id = $('#contactDepartmentSelect option:selected').val();
+    getLocationFromDepartmentID(id);
+});
+
+// Decides which type of Create is sent to the Database
+$('#newSubmitButton').click(function () {
+    if ($('#personNew').prop("checked")) {
+        addNewEmployee();
+    } else if ($('#departmentNew').prop("checked")) {
+        addNewDepartment();
+    } else if ($('#locationNew').prop("checked")) {
+        addNewLocation();
+    }
+});
+
+/////////////////////// Simple Search ////////////////////////////////////////////////
+
+$('#simpleSearchButton').click(function () {
+    let searchTerm = $('#simpleSearch').val();
+    getAllContainingSearch(searchTerm);
+});
+
+/////////////////////// Events accross multiple Modals ///////////////////////////////
+
+// Handling the checkboxes behaviour in Forms 
 $('.locationCheck').click(function () {
     $('.locations').prop('disabled', false);
     $('.locations').focus();
@@ -577,18 +781,15 @@ $('.personCheck').click(function () {
     $('.submitButton').prop('disabled', true);
 });
 
-$('#deleteOfficeModalForm select').on('change', function () {
-    if ($('#deleteOfficeModalForm select.focusedInput').val() !== 'Choose...') {
-        $('#submitDelete').prop('disabled', false);
-    } else {
-        $('#submitDelete').prop('disabled', true);
-    }
+// Used to render a location once a department is selected
+$('.dependantSelect').change(function () {
+    let id = $('.dependantSelect option:selected').val();
+    getLocationFromDepartmentID(id);
 });
 
-$('#editButtonModal').click(function () {
-    formEditor();
-});
+/////////////////////////////// Modal Close Events ////////////////////////////////////
 
+// Resets Everything on close of a modal
 $('.modal').on('hide.bs.modal', function () {
     formDisabler();
     $('.modal-body').scrollTop(0);
@@ -602,132 +803,22 @@ $('.modal').on('hide.bs.modal', function () {
     $('.generate-check').remove();
     $('#simpleSearch').val(null);
     $('#departmentCheckboxes').empty();
+    $('#newSubmitButton').prop('disabled', true);
+    $('#manageModal input.inputClear').val(null).prop('disabled', true);
+    $('#manageModal select.selectBeginning').prop('selectedIndex', 0).prop('disabled', true);
+    $('#newEntryModal input.inputClear').val(null).prop('disabled', true);
+    $('#newEntryModal select.selectBeginning').prop('selectedIndex', 0).prop('disabled', true);
+    $('#newEntryModal input.dependantInput').trigger(':reset');
     $(document).scrollTop(0);
     getAll();
     getDepartments();
     getLocations();
 });
 
+// Used when editing an employee through the manage modal to close both modals at once
 $('#contactDisplayModal').on('hidden.bs.modal', function () {
     if ($('#manageModal').hasClass('show')) {
         $('#dismissButton').click();
     }
     $('.generate-check').remove();
-});
-
-$('#newContactDepartmentSelect').change(function () {
-    let id = $('#newContactDepartmentSelect option:selected').val();
-    getLocationFromDepartmentID(id);
-});
-
-$('#contactDepartmentSelect').change(function () {
-    let id = $('#contactDepartmentSelect option:selected').val();
-    getLocationFromDepartmentID(id);
-});
-
-$('.dependantSelect').change(function () {
-    let id = $('.dependantSelect option:selected').val();
-    getLocationFromDepartmentID(id);
-})
-
-$('#manageEmployeeSelect').change(function () {
-    let employeeId = $('#manageEmployeeSelect option:selected').val();
-    let employee = idFinder(results, employeeId);
-    modalGenerator(employee);
-    formEditor();
-});
-
-$('#manageLocationSelect').change(function () {
-    $('#updateLocationName').prop('disabled', false).focus();
-    $('#updateLocationName').keyup(function () {
-        $('#manageSubmitButton').prop('disabled', false);
-    });
-});
-
-$('#manageDepartmentSelect').change(function () {
-    $('#editDepartmentName').prop('disabled', false);
-    $('#changeLocationSelect').prop('disabled', false).focus();
-    $('#changeLocationSelect').change(function () {
-        $('#manageSubmitButton').prop('disabled', false);
-    });
-});
-
-$('#manageModal .form-check-input').click(function () {
-    $('#manageSubmitButton').prop('disabled', true);
-});
-
-$('#manageModal .form-check-input').click(function () {
-    $('#manageSubmitButton').prop('disabled', true);
-});
-
-$('#locationNewInput').keyup(function () {
-    $('#newSubmitButton').prop('disabled', false);
-});
-
-$('#newEntryModal .form-check-input').click(function () {
-    $('#newSubmitButton').prop('disabled', true);
-    $('#newEntryModal input.inputClear').val(null);
-    $('#newEntryModal select.selectBeginning').prop('selectedIndex', 0);
-    $('#newEntryModal input.dependantInput').trigger(':reset');
-});
-
-$('#departmentNewInput').keyup(function () {
-    $('#newLocationSelect').prop('disabled', false);
-    $('#newLocationSelect').change(function () {
-        $('#newSubmitButton').prop('disabled', false);
-    });
-});
-
-$('#newFirstName').keyup(function () {
-    $('#newLastName').prop('disabled', false);
-    $('#newLastName').keyup(function () {
-        $('#newContactEmail').prop('disabled', false);
-        $('#newContactEmail').keyup(function () {
-            $('#newContactDepartmentSelect').prop('disabled', false);
-            $('#newContactDepartmentSelect').change(function () {
-                $('#newSubmitButton').prop('disabled', false);
-            });
-        });
-    });
-});
-
-$('#simpleSearchButton').click(function () {
-    let searchTerm = $('#simpleSearch').val();
-    getAllContainingSearch(searchTerm);
-});
-
-$('#newSubmitButton').click(function () {
-    if ($('#personNew').prop("checked")) {
-        addNewEmployee();
-    } else if ($('#departmentNew').prop("checked")) {
-        addNewDepartment();
-    } else if ($('#locationNew').prop("checked")) {
-        addNewLocation();
-    }
-});
-
-$('#manageSubmitButton').click(function () {
-    if ($('#manageLocation').prop("checked")) {
-        updateLocation();
-    } else if ($('#manageDepartment').prop("checked")) {
-        updateDepartment();
-    }
-});
-
-$('#saveEdits').click(function () {
-    updateEmployee();
-});
-
-$('#deleteButtonModal').click(function () {
-    deleteEmployee($('#employeeId').val());
-});
-
-$('#submitDelete').click(function () {
-    if ($('#person').prop("checked")) {
-        deleteEmployee($('#employeeSelect option:selected').val());
-    } else if ($('#department').prop("checked")) {
-        deleteDepartment($('#departments option:selected').val());
-    } else if ($('#deleteLocation').prop("checked")) {
-        deleteLocation($('#branches option:selected').val());
-    }
 });

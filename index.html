@@ -178,7 +178,7 @@
                         <div class="form-group">
                             <label for="manageLocationSelect">Location:</label>
 
-                            <select class="locationsSelect form-control contactSelect locations"
+                            <select class="locationsSelect form-control contactSelect locations selectBeginning"
                                 id="manageLocationSelect" disabled required>
                                 <option class="first" selected>Choose...</option>
                                 <option class="first" name="location" value=""></option>
@@ -186,15 +186,15 @@
                         </div>
                         <div class="form-group">
                             <label for="updateLocationName">New Location Name:</label>
-                            <input id="updateLocationName" type="text" name="locationName" class="form-control "
-                                disabled required>
+                            <input id="updateLocationName" type="text" name="locationName"
+                                class="form-control inputClear" disabled required>
                         </div>
 
 
                         <div class="form-group">
                             <label for="manageDepartmentSelect">Department:</label>
 
-                            <select class="departmentsSelect form-control contactSelect departments"
+                            <select class="departmentsSelect form-control contactSelect departments selectBeginning"
                                 id="manageDepartmentSelect" disabled>
                                 <option class="first" selected>Choose...</option>
                                 <option class="first" name="department" value=""></option>
@@ -203,20 +203,21 @@
                         </div>
                         <div class="form-group">
                             <label for="editDepartmentName">Change Department Name (optional):</label>
-                            <input id="editDepartmentName" class="form-control" disabled>
+                            <input id="editDepartmentName" class="form-control inputClear" disabled>
                         </div>
                         <div class="form-group">
                             <label for="changeLocationSelect">Choose Location:</label>
 
-                            <select class="locationsSelect form-control contactSelect" id="changeLocationSelect"
-                                disabled>
+                            <select class="locationsSelect form-control contactSelect selectBeginning"
+                                id="changeLocationSelect" disabled>
                                 <option class="first" selected>Choose...</option>
                                 <option class="first" name="location" value=""></option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="manageEmployeeSelect">Employees:</label>
-                            <select id="manageEmployeeSelect" class="employeesSelect form-control employees" disabled>
+                            <select id="manageEmployeeSelect"
+                                class="employeesSelect form-control selectBeginning employees" disabled>
                                 <option class="first" selected>Choose...</option>
                                 <option class="first" name="employee" val=""></option>
                             </select>

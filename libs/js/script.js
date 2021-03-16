@@ -542,11 +542,24 @@ const formDisabler = () => {
 // Adding View button from template to the DOM
 $('#team').on('click', '#viewButton', function () {
     let parents = $(this).parents();
+    console.log(parents);
     let topLevel = parents[5];
+    console.log(topLevel);
     let id = topLevel.id;
+    console.log(id);
     let employee = idFinder(results, id);
     modalGenerator(employee);
 });
+
+// Adding View button from template to the DOM for Mobile Cards
+$('#team').on('click', '#viewButtonMobile', function () {
+    let siblings = $(this).siblings();
+    let siblingID = siblings[0].id;
+    let id = siblingID.substring(1);
+    let employee = idFinder(results, id);
+    modalGenerator(employee);
+});
+
 // Adding edit button from template to the DOM
 $('#team').on('click', '#editButton', function () {
     let parents = $(this).parents();

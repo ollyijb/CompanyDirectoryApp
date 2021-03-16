@@ -423,7 +423,7 @@
                 <div id="handlebars" class="container contact">
                     <script id="card-template" type="text/x-handlebars-template">
                         {{#each employees}}
-                        <div class="image-flip col-xs-12 col-sm-6 col-md-4" id="{{id}}">
+                        <div class="image-flip col-xs-12 col-sm-6 col-md-4 d-none d-sm-block" id="{{id}}">
                             <div class="mainflip flip-0">
                                 <div class="frontside">
                                     <div class="card">
@@ -461,6 +461,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="card d-block d-sm-none container">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                            <h4 class="" id="-{{id}}">{{fullName}}</h4>
+                            <button class="btn btn-primary view viewButton" id="viewButtonMobile">
+                                <i class="fa fa-eye fa-lg"></i>
+                            </button>
+                            </div>
+                        </div> 
+                        </div>                     
                         {{/each}}
                     </script>
 

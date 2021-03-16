@@ -758,6 +758,19 @@ $('#simpleSearchButton').click(function () {
     getAllContainingSearch(searchTerm);
 });
 
+$('#simpleSearch').keypress(function (e) {
+    if (e.which == 13) {
+        e.preventDefault();
+        $('#simpleSearchButton').click();
+    }
+});
+
+$('#refresh').click(function () {
+    let searchTerm = "";
+    $('#simpleSearch').val(null);
+    getAllContainingSearch(searchTerm);
+});
+
 /////////////////////// Events accross multiple Modals ///////////////////////////////
 
 // Handling the checkboxes behaviour in Forms 

@@ -78,6 +78,34 @@
         exit;
 
     } else {
+
+		$getQuery = 'Select name FROM location WHERE id = ' . $_POST['id'];
+
+		$result = $conn->query($getQuery);
+
+		if (!$result) {
+
+			$output['status']['code'] = "400";
+			$output['status']['name'] = "executed";
+			$output['status']['description'] = "query failed";	
+			$output['data'] = [];
+	
+			mysqli_close($conn);
+	
+			echo json_encode($output); 
+	
+			exit;
+	
+		}
+	
+		$data = [];
+	
+		while ($row = mysqli_fetch_assoc($result)) {
+	
+			array_push($data, $row);
+	
+		}
+
         $query = 'DELETE FROM location WHERE id = ' . $_POST['id'];
 
         $result = $conn->query($query);
@@ -102,7 +130,7 @@
         $output['status']['name'] = "Delete";
         $output['status']['description'] = "success";
         $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-        $output['data'] = [];
+        $output['data'] = $data[0]['name'];
         $output['custom'] = 'Free to Delete';
         mysqli_close($conn);
 

@@ -128,6 +128,7 @@ const getAllContainingSearch = (searchTerm) => {
 
 // Adds new Location to Database & Closes New Entry Modal
 const addNewLocation = () => {
+    let newItem = $('#locationNewInput').val();
     $.ajax({
         url: 'libs/php/addNewLocation.php',
         type: 'POST',
@@ -136,7 +137,8 @@ const addNewLocation = () => {
             locationName: $('#locationNewInput').val()
         },
         success: function (result) {
-            alert('New Location Added');
+            $('#successText').html(result.data);
+            $('#successModal').modal();
             $('#newEntryModal .btn-danger').click();
         },
         error: (err) => {
@@ -156,7 +158,8 @@ const addNewDepartment = () => {
             locationID: $('#newLocationSelect option:selected').val()
         },
         success: function (result) {
-            alert(`New Department Added`);
+            $('#successText').html(result.data);
+            $('#successModal').modal();
             $('#newEntryModal .btn-danger').click();
         },
         error: (err) => {
@@ -181,7 +184,8 @@ const addNewEmployee = () => {
             locationID: $('#newContactLocationID').val()
         },
         success: function (result) {
-            alert(`New Employee Added`)
+            $('#successText').html(result.data);
+            $('#successModal').modal();
             $('#newEntryModal .btn-danger').click();
         },
         error: (err) => {
@@ -203,10 +207,18 @@ const deleteDepartment = (id) => {
         },
         success: function (result) {
             if (result.status.code === "200") {
-                alert('Department Deleted');
+                $('#successText').html(`${result.data} deleted`);
+                $('#noDelete').click();
+                $('#successModal').modal();
                 $('#deleteOfficeModal .btn-danger').click();
             } else {
-                alert('Employees still work in this department. Please move them before deleting this department');
+                $('#dependantsReason').html(`Can't delete as you have the following employees working there`);
+                $('#noDelete').click();
+                result.data.forEach(function (item) {
+                    let name = item.firstName + " " + item.lastName;
+                    $('#dependantsList').append('<li>' + name + '</li>');
+                });
+                $('#dependantsModal').modal();
                 $('#deleteOfficeModal .btn-danger').click();
             }
         },
@@ -227,10 +239,18 @@ const deleteLocation = (id) => {
         },
         success: function (result) {
             if (result.status.code === "200") {
-                alert('Location Deleted');
+                $('#successText').html(`${result.data} deleted`);
+                $('#noDelete').click();
+                $('#successModal').modal();
                 $('#deleteOfficeModal .btn-danger').click();
             } else {
-                alert('This Location still has Departments assigned to it. Please move them before deleting this location');
+                $('#dependantsReason').html(`Can't delete as you have the following departments based there`);
+                $('#noDelete').click();
+                result.data.forEach(function (item) {
+
+                    $('#dependantsList').append('<li>' + item.name + '</li>');
+                });
+                $('#dependantsModal').modal();
                 $('#deleteOfficeModal .btn-danger').click();
             }
         },
@@ -250,8 +270,12 @@ const deleteEmployee = (id) => {
             id: id
         },
         success: function (result) {
-            alert('employee deleted');
-            $('#contactDisplayModal .btn-danger').click();
+            console.log(result);
+            $('#successText').html(`${result.data.firstName} ${result.data.lastName} deleted`);
+            $('#noDelete').click();
+            $('#closeContactDelete').click();
+            $('#successModal').modal();
+            $('#contactDisplayModal .btn-danger closer').click();
             $('#deleteOfficeModal .btn-danger').click();
         },
         error: (err) => {
@@ -273,6 +297,8 @@ const updateLocation = () => {
             locationName: $('#updateLocationName').val()
         },
         success: function (result) {
+            $('#successText').html(result.data);
+            $('#successModal').modal();
             $('#manageModal .btn-danger').click();
         },
         error: (err) => {
@@ -294,6 +320,8 @@ const updateDepartment = () => {
             locationID: $('#changeLocationSelect option:selected').val()
         },
         success: function (result) {
+            $('#successText').html(result.data);
+            $('#successModal').modal();
             $('#manageModal .btn-danger').click();
         },
         error: (err) => {
@@ -316,6 +344,8 @@ const updateEmployee = () => {
             departmentID: $('#contactDepartmentSelect option:selected').val()
         },
         success: function (result) {
+            $('#successText').html(result.data);
+            $('#successModal').modal();
             $('#contactDisplayModal .btn-danger').click();
             $('#manageModal .btn-danger').click();
         },
@@ -330,24 +360,26 @@ const updateEmployee = () => {
 // Adds checkboxes to the DOM with ID values, used in advanced searh Modal
 const checkboxAdderWithID = (container, array, param, nameParam) => {
     array.forEach(function (item) {
-        let newDiv = $(document.createElement('div')).prop({
-            class: "form-check"
-        });
-        container.append(newDiv);
-        newDiv.append(
-            $(document.createElement('input')).prop({
-                id: nameParam + "ID " + item.id,
-                name: nameParam,
-                value: item.id,
-                type: "checkbox",
-                class: "form-check-input generate-check"
-            })
-        ).append(
-            $(document.createElement('label')).prop({
-                for: nameParam,
-                class: "form-check-label generate-check"
-            }).html(item[param])
-        )
+        if (item !== item) {
+            let newDiv = $(document.createElement('div')).prop({
+                class: "form-check"
+            });
+            container.append(newDiv);
+            newDiv.append(
+                $(document.createElement('input')).prop({
+                    id: nameParam + "ID " + item.id,
+                    name: nameParam,
+                    value: item.id,
+                    type: "checkbox",
+                    class: "form-check-input generate-check"
+                })
+            ).append(
+                $(document.createElement('label')).prop({
+                    for: nameParam,
+                    class: "form-check-label generate-check"
+                }).html(item[param])
+            )
+        }
     })
 }
 
@@ -507,6 +539,20 @@ const uniqueLocationPairs = (array) => {
 
 /*************** Document Ready Run  ***********************/
 $(document).ready(function () {
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 50) {
+            $('#back-to-top').fadeIn();
+        } else {
+            $('#back-to-top').fadeOut();
+        }
+    });
+    // scroll body to 0px on click
+    $('#back-to-top').click(function () {
+        $('body,html').animate({
+            scrollTop: 0
+        }, 400);
+        return false;
+    });
     getAll();
     getDepartments();
     getLocations();
@@ -576,8 +622,10 @@ $('#team').on('click', '#deleteButton', function () {
     let topLevel = parents[5];
     let id = topLevel.id;
     let employee = idFinder(results, id);
-    //$('#warningFullName').html(employee.fullName);
-    //$('#deleteWarning').alert();
+    console.log(employee);
+    $('#deleteContactItem').html(employee.fullName);
+    $('#deleteContactId').val(employee.id);
+    $('#contactDeleteWarning').modal();
 });
 
 // Unlocks the form so it can be edited by the user
@@ -587,7 +635,14 @@ $('#editButtonModal').click(function () {
 
 // Deletes the employee clicked on by the user
 $('#deleteButtonModal').click(function () {
-    deleteEmployee($('#employeeId').val());
+    $('#deleteContactItem').html($('#fullName').val());
+    $('#deleteContactId').val($('#employeeId').val());
+    $('#contactDeleteWarning').modal();
+});
+
+$('#fireContactDelete').click(function () {
+    deleteEmployee($('#deleteContactId').val());
+    //$('#closeContactDelete').click();
 });
 
 // Updates the database with user changes to employee
@@ -615,12 +670,30 @@ $('#deleteOfficeModalForm select').on('change', function () {
 // Handles which type of delete is sent to the database
 $('#submitDelete').click(function () {
     if ($('#person').prop("checked")) {
+        $('#deleteItem').html($('#employeeSelect option:selected').html());
+        $('#deleteWarning').modal();
+    } else if ($('#department').prop("checked")) {
+        $('#deleteItem').html($('#departments option:selected').html());
+        $('#deleteWarning').modal();
+    } else if ($('#deleteLocation').prop("checked")) {
+        $('#deleteItem').html($('#branches option:selected').html());
+        $('#deleteWarning').modal();
+    }
+});
+
+$('#fireDelete').click(function () {
+    if ($('#person').prop("checked")) {
         deleteEmployee($('#employeeSelect option:selected').val());
     } else if ($('#department').prop("checked")) {
         deleteDepartment($('#departments option:selected').val());
     } else if ($('#deleteLocation').prop("checked")) {
         deleteLocation($('#branches option:selected').val());
     }
+});
+
+$('#noDelete').click(function () {
+    $('#deleteWarning').modal('hide');
+    $('#deleteOfficeModal').modal('hide');
 });
 
 ///////////////////////// Advanced Search Modal //////////////////////////////
@@ -848,3 +921,11 @@ $('#contactDisplayModal').on('hidden.bs.modal', function () {
     }
     $('.generate-check').remove();
 });
+
+$('#contactDeleteWarning').on('hide.bs.modal', function () {
+    if ($('#contactDisplayModal').hasClass('show')) {
+        $('#contactDisplayModal').modal('hide');
+    }
+    $('.generate-check').remove();
+});
+

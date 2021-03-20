@@ -16,7 +16,7 @@
 
 <body>
     <!-- Nav -->
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar sticky-top navbar-light bg-light">
         <div class="container-fluid">
             <!--<button class="btn btn-primary" id="advancedSearchButton">
                 <i class="fa fa-search fa-lg"></i>
@@ -44,6 +44,9 @@
             </button>
         </div>
     </nav>
+
+    <a id="back-to-top" href="#" class="btn btn-light btn-lg back-to-top" role="button"><i
+            class="fa fa-chevron-up"></i></a>
 
     <!-------------- Advanced Search Modal ----------->
     <div class="modal" id="advancedSearchModal">
@@ -345,7 +348,7 @@
                         <i class="fa fa-pencil fa-lg"></i>
                     </button>
                     <h4 class="modal-title">Contact</h4>
-                    <button class="btn btn-primary delete" id="deleteButtonModal">
+                    <button class="btn btn-danger delete" id="deleteButtonModal">
                         <i class="fa fa-trash fa-lg"></i>
                     </button>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -406,7 +409,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger closer" data-dismiss="modal"
+                        id="dismissContact">Close</button>
                     <button type="button" class="btn btn-success" disabled id="saveEdits">Save</button>
                     </form>
                 </div>
@@ -454,7 +458,7 @@
                                                 <button class="btn btn-primary view viewButton" id="viewButton">
                                                     <i class="fa fa-eye fa-lg"></i>
                                                 </button>
-                                                <button class="btn btn-primary delete" id="deleteButton">
+                                                <button class="btn btn-danger delete" id="deleteButton">
                                                     <i class="fa fa-trash fa-lg"></i>
                                                 </button>
 
@@ -464,7 +468,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card d-block d-sm-none container">
+                        <div class="card d-block d-sm-none container" id="mobileCard">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">
                             <h4 class="" id="-{{id}}">{{fullName}}</h4>
@@ -481,12 +485,92 @@
     </section>
     <!-- Team -->
     <!--------------------- Turn commented out into a warning modal for deleting people ------------------------>
-    <!--<div id="deleteWarning" class="alert alert-warning" role="alert">
-        <strong>Warning!</strong>
-        <p>Are you sure you want to delete <span id="warningFullName"></span>?</p>
-        <button type="button" class="btn btn-primary" data-dismiss="alert">No</button>
-        <button type="button" class="btn btn-danger" id="alertDeleteButton" data-dismiss="alert">Delete</button>
-    </div>-->
+    <div class="modal" id="deleteWarning">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Warning!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="deleteTrigger" val="">
+                    <p>Are you sure you want to delete <span id="deleteItem"></span>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="noDelete">No, Close</button>
+                    <button type="button" class="btn btn-primary" id="fireDelete">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal" id="contactDeleteWarning">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Warning!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="contactDismiss">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="deleteContactId" val="">
+                    <p>Are you sure you want to delete <span id="deleteContactItem"></span>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="closeContactDelete" data-dismiss="modal">No,
+                        Close</button>
+                    <button type="button" class="btn btn-primary" id="fireContactDelete">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal" id="successModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Success!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4 id="successText"></h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Got It</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="dependantsModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dependantsReason"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul id="dependantsList" class="list">
+
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Got It</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
     <script src="libs/js/script.js"></script>
 </body>

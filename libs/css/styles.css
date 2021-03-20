@@ -17,13 +17,13 @@
 }
 
 section {
-    padding: 60px 0;
+    padding: 20px 0;
 }
 
 section .section-title {
     text-align: center;
     color: #007b5e;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
     text-transform: uppercase;
 }
 
@@ -135,4 +135,18 @@ section .section-title {
     border-bottom: 1px solid #dee2e6;
     border-top-left-radius: calc(.3rem - 1px);
     border-top-right-radius: calc(.3rem - 1px);
+}
+
+#back-to-top {
+    position: fixed;
+    bottom: 25px !important;
+    right: 25px !important;
+    display: none;
+    z-index: 999999999;
+    background-color: rgb(175, 175, 175);
+}
+
+#mobileCard {
+    border-bottom: 1px solid black !important;
+    margin: 2px;
 }

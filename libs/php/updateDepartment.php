@@ -32,11 +32,9 @@
 
 	}	
 
-    if (count($_POST['departmentName']) < 2) {
-        $name = $_POST['originalName'];
-    } else {
-        $name = ucfirst($_POST['departmentName']);
-    }
+    
+    $name = ucfirst($_POST['departmentName']);
+
 
 	// $_REQUEST used for development / debugging. Remember to cange to $_POST for production
 

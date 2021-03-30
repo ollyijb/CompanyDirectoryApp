@@ -18,11 +18,9 @@
     <!-- Nav -->
     <nav class="navbar sticky-top navbar-light bg-light">
         <div class="container-fluid">
-            <!--<button class="btn btn-primary" id="advancedSearchButton">
-                <i class="fa fa-search fa-lg"></i>
-            </button>-->
-            <button class="btn btn-primary" id="refresh">
-                <i class="fa fa-refresh fa-lg"></i>
+
+            <button class="btn btn-primary" id="employeeButton">
+                <i class="fa fa-user fa-lg"></i>
             </button>
 
             <div class="d-flex col-6" id="simpleForm">
@@ -33,13 +31,13 @@
                 </button>
             </div>
 
-            <button class="btn btn-danger" id="deleteOfficeButton">
-                <i class="fa fa-trash fa-lg"></i>
+            <button class="btn btn-info" id="locationButton">
+                <i class="fa fa-plane fa-lg"></i>
             </button>
-            <button class="btn btn-primary" id="manageOfficeButton">
-                <i class="fa fa-pencil fa-lg"></i>
+            <button class="btn btn-dark" id="departmentButton">
+                <i class="fa fa-institution fa-lg"></i>
             </button>
-            <button class="btn btn-primary" id="addNewButton">
+            <button class="btn btn-success" id="addNewButton">
                 <i class="fa fa-plus fa-lg"></i>
             </button>
         </div>
@@ -48,299 +46,9 @@
     <a id="back-to-top" href="#" class="btn btn-light btn-lg back-to-top" role="button"><i
             class="fa fa-chevron-up"></i></a>
 
-    <!-------------- Advanced Search Modal ----------->
-    <div class="modal" id="advancedSearchModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Detailed Search</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body modalStyle" id="advancedSearchContent">
-                    <form>
-                        <div id="advancedSearchInputDiv" class="form-gruop">
-                            <input class="form-control me-2" name="simpleSearch" type="search" id="advancedSearchInput"
-                                placeholder="Search" aria-label="Search">
-                        </div>
-                        <div id="departmentCheckboxes" class="form-group">
-                            <h5>Departments</h4>
-                                <div class="form-check">
-                                    <input class="form-check-input" name="department" type="checkbox"
-                                        value="alldepartments" id="alldepartments">
-                                    <label class="form-check-label" for="deparment">All departments</label>
-                                </div>
-
-                        </div>
-                        <div id="locationCheckboxes" class="form-group">
-                            <h5>Locations</h4>
-                                <div class="form-check">
-                                    <input class="form-check-input" name="location" type="checkbox" value="alllocations"
-                                        id="alllocations">
-                                    <label class="form-check-label" for="location">All locations</label>
-                                </div>
-
-                        </div>
-
-
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success" id="searchAdvancedModalButton">Search</button>
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!------------ Delete Location or Department Modal ---------------->
-    <div class="modal resetChecks" id="deleteOfficeModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Delete Selector</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body modalStyle" id="deleteOfficeContent">
-                    <form id="deleteOfficeModalForm">
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input class="form-check-input locationCheck" name="office" type="radio" value="option1"
-                                    id="deleteLocation">
-                                <label class="form-check-label" for="deleteLocation">Location</label>
-                            </div>
-                            <div class=" form-check">
-                                <input class="form-check-input departmentCheck" name="office" type="radio"
-                                    value="option2" id="department">
-                                <label class="form-check-label" for="department">Department</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input personCheck" name="office" type="radio" value="option3"
-                                    id="person">
-                                <label class="form-check-label" for="person">Employee</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="branches">Locations</label>
-                            <select id="branches" class="form-control locationsSelect locations" disabled>
-                                <option class="first" selected>Choose...</option>
-                                <option class="first" name="location" val=""></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="departments">Departments</label>
-                            <select id="departments" class="departmentsSelect form-control departments" disabled>
-                                <option class="first" selected>Choose...</option>
-                                <option class="first" name="department" val=""></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="employeeSelect">Employees</label>
-                            <select id="employeeSelect" class="employeesSelect form-control employees" disabled>
-                                <option class="first" selected>Choose...</option>
-                                <option class="first" name="employee" val=""></option>
-                            </select>
-                        </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success submitButton" disabled
-                        id="submitDelete">Delete</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-------------- Manage Modal --------------->
-
-    <div class="modal resetChecks" id="manageModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Updater</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body modalStyle" id="manageModalContent">
-                    <form id="manageModalForm">
-                        <div class="form-group" id="manageChecks">
-                            <div class="form-check">
-                                <input class="form-check-input locationCheck" name="office" type="radio"
-                                    value="manageLocation" id="manageLocation">
-                                <label class="form-check-label" for="manageLocation">Location</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input departmentCheck" name="office" type="radio"
-                                    value="manageDepartment" id="manageDepartment">
-                                <label class="form-check-label" for="manageDepartment">Department</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input personCheck" name="office" type="radio"
-                                    value="manageEmployee" id="manageEmployee">
-                                <label class="form-check-label" for="manageEmployee">Employee</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="manageLocationSelect">Location:</label>
-
-                            <select class="locationsSelect form-control contactSelect locations selectBeginning"
-                                id="manageLocationSelect" disabled required>
-                                <option class="first" selected>Choose...</option>
-                                <option class="first" name="location" value=""></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="updateLocationName">New Location Name:</label>
-                            <input id="updateLocationName" type="text" name="locationName"
-                                class="form-control inputClear" disabled required>
-                        </div>
-
-
-                        <div class="form-group">
-                            <label for="manageDepartmentSelect">Department:</label>
-
-                            <select class="departmentsSelect form-control contactSelect departments selectBeginning"
-                                id="manageDepartmentSelect" disabled>
-                                <option class="first" selected>Choose...</option>
-                                <option class="first" name="department" value=""></option>
-                            </select>
-
-                        </div>
-                        <div class="form-group">
-                            <label for="editDepartmentName">Change Department Name (optional):</label>
-                            <input id="editDepartmentName" class="form-control inputClear" disabled>
-                        </div>
-                        <div class="form-group">
-                            <label for="changeLocationSelect">Choose Location:</label>
-
-                            <select class="locationsSelect form-control contactSelect selectBeginning"
-                                id="changeLocationSelect" disabled>
-                                <option class="first" selected>Choose...</option>
-                                <option class="first" name="location" value=""></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="manageEmployeeSelect">Employees:</label>
-                            <select id="manageEmployeeSelect"
-                                class="employeesSelect form-control selectBeginning employees" disabled>
-                                <option class="first" selected>Choose...</option>
-                                <option class="first" name="employee" val=""></option>
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="dismissButton" type="button" class="btn btn-danger"
-                                data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success" id="manageSubmitButton"
-                                disabled>Update</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-------------- Create New Modal ----------->
-    <div class="modal resetChecks" id="newEntryModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">New Entry</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body modalStyle" id="newEntryContent">
-                    <form>
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input class="form-check-input locationCheck" name="office" type="radio"
-                                    value="locationNew" id="locationNew">
-                                <label class="form-check-label" for="locationNew">Location</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input departmentCheck" name="office" type="radio"
-                                    value="departmentNew" id="departmentNew">
-                                <label class="form-check-label" for="departmentNew">Department</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input personCheck" name="office" type="radio" value="personNew"
-                                    id="personNew">
-                                <label class="form-check-label" for="personNew">Employee</label>
-                            </div>
-                        </div>
-
-                        <div class="form-group" id="newLocation">
-                            <label for="locationNewInput">Location Name:</label>
-                            <input id="locationNewInput" class="form-control locations inputClear" type="text"
-                                name="location" disabled>
-                        </div>
-
-                        <div class="form-group" id="newDepartment">
-                            <label for="deparmentNewInput">Department Name:</label>
-                            <input id="departmentNewInput" class="form-control departments inputClear" type="text"
-                                name="department" disabled>
-                            <label for="newLocationSelect">Select Location:</label>
-                            <select class="form-control locationsSelect selectBeginning" id="newLocationSelect"
-                                disabled>
-                                <option class="first" selected>Choose...</option>
-                                <option class="first" name="location" val=""></option>
-                            </select>
-                        </div>
-
-                        <div class="form-group" id="newPerson">
-                            <div class="form-group row">
-                                <label for="newFirstName" class="col-4 col-form-label e">First Name:</label>
-                                <div class="col-8">
-                                    <input type="text" id="newFirstName" name="firstName"
-                                        class="form-control employees inputClear" value="" disabled>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="newLastName" class="col-4 col-form-label">Last Name:</label>
-                                <div class="col-8">
-                                    <input type="text" id="newLastName" name="lastName" class="form-control inputClear"
-                                        value="" disabled>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="newContactEmail" class="col-4 col-form-label">Email:</label>
-                                <div class="col-8">
-                                    <input type="email" id="newContactEmail" name="email"
-                                        class="form-control inputClear" value="" disabled>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="newContactDepartmentSelect" class="col-4 col-form-label">Department:</label>
-                                <div class="col-8">
-                                    <select
-                                        class="departmentsSelect form-control contactSelect first dependantSelect selectBeginning"
-                                        id="newContactDepartmentSelect" disabled>
-                                        <option class="first" name="department" value=""></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="newContactLocation" class="col-4 col-form-label">Location:</label>
-                                <div class="col-8">
-                                    <input type="hidden" id="newContactLocationID" name="locationID"
-                                        class="dependantInputHidden" value="">
-                                    <input type="text" id="newContactLocation" name="location"
-                                        class="form-control  dependantInput" value="" readonly>
-                                </div>
-                            </div>
-                        </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="newSubmitButton" disabled>Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Contact Display Modal -->
-    <div class="modal" id="contactDisplayModal">
+    <div class="modal modalInfo" id="contactDisplayModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="custom-header d-flex justify-content-between">
@@ -354,7 +62,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body modalStyle" id="contactDisplayContent">
-                    <form id="formTest" action="libs/php/test.php" method="POST">
+                    <form id="formTest">
                         <fieldset id="editModalForm" disabled>
                             <div class="form-group row">
                                 <label for="fullName" class="col-4 col-form-label">Full Name:</label>
@@ -400,8 +108,7 @@
                                         id="contactLocationSelect" disabled>
                                         <option class="first" name="location" value=""></option>
                                     </select>
-                                    <!--<input type="text" id="contactLocation" name="location"
-                                        class="form-control  dependantInput" value="" readonly>-->
+
                                 </div>
                             </div>
                         </fieldset>
@@ -422,15 +129,18 @@
     <!-- Team -->
     <section id="team" class="pb-5">
         <div class="container">
-            <h5 class="section-title h1">OUR TEAM</h5>
+            <h5 class="section-title h1" id="title">TEAM</h5>
             <div id="employeeList" class="row">
 
-                <!----------------------- Rough Template --------------------------------------->
+                <!----------------------- Templates --------------------------------------->
 
                 <div id="handlebars" class="container contact">
-                    <script id="card-template" type="text/x-handlebars-template">
+                    <script id="employees-template" type="text/x-handlebars-template">
+                        <!-- employees -->
+                    <div id="employeeDisplayDiv" class="row">
+
                         {{#each employees}}
-                        <div class="image-flip col-xs-12 col-sm-6 col-md-4 d-none d-sm-block" id="{{id}}">
+                        <div class="image-flip col-xs-12 col-sm-6 col-md-4 d-none d-sm-block employeeCard" id="{{id}}">
                             <div class="mainflip flip-0">
                                 <div class="frontside">
                                     <div class="card">
@@ -447,7 +157,8 @@
                                     <div class="card">
                                         <div class="card-body text-center mt-4">
                                             <h4 class="card-title">{{fullName}}</h4>
-                                            <p><img class="img-fluid" src={{imageURL}} alt={{countryImage}} height="32" width="32"></p>
+                                            <p><img class="img-fluid" src={{imageURL}} alt={{countryImage}} height="32"
+                                                    width="32"></p>
                                             <h5 class="card-text" id="email">{{email}}</h5>
                                             <h5 class="card-text">{{department}}</h5>
                                             <h5 class="card-text">{{location}}</h5>
@@ -468,24 +179,137 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card d-block d-sm-none container" id="mobileCard">
+                        <!-- mobile-->
+                        <div class="card d-block d-sm-none container employeeCard mobileCard" id="FmobileCard">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">
-                            <h4 class="" id="-{{id}}">{{fullName}}</h4>
-                            <button class="btn btn-primary view viewButton" id="viewButtonMobile">
-                                <i class="fa fa-eye fa-lg"></i>
-                            </button>
+                                    <h4 class="" id="-{{id}}">{{fullName}}</h4>
+                                    <button class="btn btn-primary view viewButton" id="viewButtonMobile">
+                                        <i class="fa fa-eye fa-lg"></i>
+                                    </button>
+                                </div>
                             </div>
-                        </div> 
-                        </div>                     
+                        </div>
                         {{/each}}
+
+                    </div>
                     </script>
 
+                    <!-- Locations-->
+                    <script id="locations-template" type="text/x-handlebars-template">
+
+                    <div id="locationsDisplayDiv" class="row">
+
+                        {{#each locations}}
+                        <div class=" col-xs-12 col-sm-6 col-md-4 d-none d-sm-block employeeCard" id="{{id}}">
+                            <div class="mainflip flip-0">
+                                <div class="frontside">
+                                    <div class="card">
+                                        <div class="card-body text-center">
+                                            <h4 class="card-title" id="location">{{name}}</h4>
+                                            <p><img class="img-fluid" id="countryImage" src={{imageURL}}
+                                                    alt={{countryImage}}></p>
+                                            
+                                            <div class="d-flex justify-content-between">
+                                                <button class="btn btn-primary edit" id="editLocationButton">
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </button>
+                                            
+                                                <button class="btn btn-danger delete" id="deleteLocationButton">
+                                                    <i class="fa fa-trash fa-lg"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <!-- mobile-->
+                        <div class="card d-block d-sm-none container mobileCard" id="mobileLocationCard">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h4 class="" id="L{{id}}">{{name}}</h4>
+                                    <div>
+                                        
+                                        <button class="btn btn-primary edit" id="editLocationButtonMobile">
+                                            <i class="fa fa-pencil fa-lg"></i>
+                                        </button>
+                                        <button class="btn btn-danger delete" id="deleteLocationButtonMobile">
+                                            <i class="fa fa-trash fa-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+
+                    </div>
+                    </script>
+
+                    <!-- Departments -->
+                    <script id="departments-template" type="text/x-handlebars-template">
+
+                    <div id="departmentsDisplayDiv" class="row">
+
+                        {{#each departments}}
+                        <div class=" col-xs-12 col-sm-6 col-md-4 d-none d-sm-block employeeCard" id="{{id}}">
+                            <div class="mainflip flip-0">
+                                <div class="frontside">
+                                    <div class="card">
+                                        <div class="card-body text-center">
+                                            <h4 class="card-title" id="department">{{name}}</h4>
+
+                                            <p><img class="img-fluid" id="countryImageDepartment" src={{imageURL}}
+                                                    alt={{countryImage}}></p>
+                                            <h5 class="card-text" id="departmentName">{{department}}</h5>
+                                            <h5 class="card-text" id="locationName">{{location}}</h5>
+                                            <div class="d-flex justify-content-between">
+                                                <button class="btn btn-primary edit" id="editDepartmentButton">
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </button>
+                        
+                                                <button class="btn btn-danger delete" id="deleteDepartmentButton">
+                                                    <i class="fa fa-trash fa-lg"></i>
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <!-- mobile-->
+                        <div class="card d-block d-sm-none container mobileCard" id="mobileDepartmentCard">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <h4 class="" id="D{{id}}">{{name}}</h4>
+                                    <div id="buttonContainerMobile">
+                                        <button class="btn btn-primary edit" id="editDepartmentButtonMobile">
+                                            <i class="fa fa-pencil fa-lg"></i>
+                                        </button>
+                                        <button class="btn btn-danger delete" id="deleteDepartmentButtonMobile">
+                                            <i class="fa fa-trash fa-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{/each}}
+
+                    </div>
+                    </script>
+
+
                 </div>
+
     </section>
     <!-- Team -->
     <!--------------------- Turn commented out into a warning modal for deleting people ------------------------>
-    <div class="modal" id="deleteWarning">
+    <div class="modal warningModal" id="deleteWarning">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header alert alert-warning">
@@ -496,6 +320,7 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" id="deleteTrigger" val="">
+                    <input type="hidden" id="deleteItemID" val="">
                     <p>Are you sure you want to delete <span id="deleteItem"></span>?</p>
                 </div>
                 <div class="modal-footer">
@@ -507,7 +332,7 @@
 
     </div>
 
-    <div class="modal" id="contactDeleteWarning">
+    <div class="modal warningModal" id="contactDeleteWarning">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header alert alert-warning">
@@ -530,7 +355,7 @@
 
     </div>
 
-    <div class="modal" id="successModal">
+    <div class="modal successModal" id="successModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header alert alert-success">
@@ -549,7 +374,7 @@
         </div>
     </div>
 
-    <div class="modal" id="dependantsModal">
+    <div class="modal failModal" id="dependantsModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header alert alert-danger">
@@ -565,6 +390,226 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Got It</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal failModal" id="noResults">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header alert alert-danger">
+                    <h5 class="modal-title alert-heading">No Results Found!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul id="dependantsList" class="list">
+
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Got It</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-------------- New Employee Modal ----------->
+    <div class="modal modalInfo newModal" id="newEmployeeModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">New Employee</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body modalStyle" id="newEmployeeContent">
+                    <form>
+
+                        <div class="form-group" id="newPerson">
+                            <div class="form-group row">
+                                <label for="newFirstName" class="col-4 col-form-label e">First Name:</label>
+                                <div class="col-8">
+                                    <input type="text" id="newFirstName" name="firstName"
+                                        class="form-control employees inputClear" value="">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="newLastName" class="col-4 col-form-label">Last Name:</label>
+                                <div class="col-8">
+                                    <input type="text" id="newLastName" name="lastName"
+                                        class="form-control inputClear disable" value="" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="newContactEmail" class="col-4 col-form-label">Email:</label>
+                                <div class="col-8">
+                                    <input type="email" id="newContactEmail" name="email"
+                                        class="form-control inputClear disable" value="" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="newContactDepartmentSelect" class="col-4 col-form-label">Department:</label>
+                                <div class="col-8">
+                                    <select
+                                        class="departmentsSelect form-control contactSelect first dependantSelect selectBeginning disable"
+                                        id="newContactDepartmentSelect" disabled>
+                                        <option class="first" name="department" value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="newContactLocation" class="col-4 col-form-label">Location:</label>
+                                <div class="col-8">
+                                    <input type="hidden" id="newContactLocationID" name="locationID"
+                                        class="dependantInputHidden" value="">
+                                    <input type="text" id="newContactLocation" name="location"
+                                        class="form-control  dependantInput" value="" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"
+                        id="closeNewEmployee">Close</button>
+                    <button type="button" class="btn btn-primary" id="newSubmitButton" disabled>Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-------------- New Department Modal ----------->
+    <div class="modal modalInfo newModal" id="newDepartmentModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">New Department</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body modalStyle" id="newDepartmentContent">
+                    <form>
+
+                        <div class="form-group" id="newDepartment">
+                            <label for="deparmentNewInput">Department Name:</label>
+                            <input id="departmentNewInput" class="form-control departments inputClear" type="text"
+                                name="department">
+                            <label for="newLocationSelect">Select Location:</label>
+                            <select class="form-control locationsSelect selectBeginning disable" id="newLocationSelect"
+                                disabled>
+                                <option class="first" selected>Choose...</option>
+                                <option class="first" name="location" val=""></option>
+                            </select>
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"
+                        id="closeNewDepartment">Close</button>
+                    <button type="button" class="btn btn-primary" id="newDepartmentSubmitButton"
+                        disabled>Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-------------- New Location Modal ----------->
+    <div class="modal modalInfo newModal" id="newLocationModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">New Department</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body modalStyle" id="newLocationContent">
+                    <form>
+
+                        <div class="form-group" id="newLocation">
+                            <label for="locationNewInput">Location Name:</label>
+                            <input id="locationNewInput" class="form-control locations inputClear" type="text"
+                                name="location">
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"
+                        id="closeNewLocation">Close</button>
+                    <button type="button" class="btn btn-primary" id="newLocationSubmitButton" disabled>Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Location Modal -->
+    <div class="modal modalInfo" id="manageLocationModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Manage Location</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body modalStyle" id="manageLocationContent">
+                    <form>
+
+                        <div class="form-group">
+                            <label for="updateLocationName">New Location Name:</label>
+                            <input type="hidden" id="updateLocationID" val="" name="locationID">
+                            <input id="updateLocationName" type="text" name="locationName"
+                                class="form-control inputClear">
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"
+                        id="updateLocationClose">Close</button>
+                    <button type="button" class="btn btn-primary" id="updateLocationSubmitButton"
+                        disabled>Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Department Modal -->
+    <div class="modal modalInfo" id="manageDepartmentModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Manage Department</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body modalStyle" id="manageDepartmentContent">
+                    <form>
+                        <div class="form-group">
+                            <div><label for="editDepartmentName">Department Name:</label>
+                                <button type="button" class="btn btn-secondary" id="editDepartmentNameButton">
+                                    <i class="fa fa-pencil fa-lg"></i>
+                                </button>
+                            </div>
+                            <input type="text" id="editDepartmentName" class="form-control inputClear" val="" disabled>
+                            <input type="hidden" id="departmentID" name="departmentID" val="">
+                        </div>
+                        <div class="form-group">
+                            <label for="changeLocationSelect">Choose Location:</label>
+
+                            <select class="locationsSelect form-control contactSelect selectBeginning"
+                                id="changeLocationSelect" disabled>
+                                <option class="first" selected>Choose...</option>
+                                <option class="first" name="location" value=""></option>
+                            </select>
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"
+                        id="updateDepartmentClose">Close</button>
+                    <button type="button" class="btn btn-primary" id="updateDepartmentSubmitButton"
+                        disabled>Update</button>
+                    </form>
                 </div>
             </div>
         </div>

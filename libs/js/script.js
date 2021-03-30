@@ -1,16 +1,12 @@
-// Handlebars compiler
-let renderResults = Handlebars.compile($('#card-template').html());
+// Handlebars compilers
+const renderEmployees = Handlebars.compile($('#employees-template').html());
+const renderLocations = Handlebars.compile($('#locations-template').html());
+const renderDepartments = Handlebars.compile($('#departments-template').html());
 
 // Storing the results of getting All from the database
 let results = [];
 let locations = [];
 let departments = [];
-
-// Formats name given back from database
-const nameFormatter = (object) => {
-    let nameString = `${object.firstName} ${object.lastName}`;
-    return nameString;
-}
 
 /******************************** AJAX GETS **********************************************/
 
@@ -29,8 +25,7 @@ const getAll = () => {
                 employees.push(formattedEmployee);
             }
             results = employees;
-            // Compiling results with Handlebars
-            document.getElementById('employeeList').insertAdjacentHTML('beforeend', (renderResults({ employees: employees })));
+            $('#handlebars').html(renderEmployees({ employees: employees }));
             let people = uniqueEmployeePairs(results);
             optionAdderWithID($('.employeesSelect'), people, 'fullName', 'fullName');
         }, error: (err) => {
@@ -49,7 +44,6 @@ const getDepartments = () => {
             let departmentInfo = result.data;
             departmentInfo.sort((a, b) => (a.name > b.name) ? 1 : -1);
             optionAdderWithID($('.departmentsSelect'), departmentInfo, 'name', 'name');
-            checkboxAdderWithID($('#departmentCheckboxes'), departmentInfo, 'name', 'department');
             departments = departmentInfo;
         },
         error: (err) => {
@@ -68,7 +62,6 @@ const getLocations = () => {
             let locationsInfo = result.data;
             locationsInfo.sort((a, b) => (a.name > b.name) ? 1 : -1);
             optionAdderWithID($('.locationsSelect'), locationsInfo, 'name', 'name');
-            checkboxAdderWithID($('#locationCheckboxes'), locationsInfo, 'name', 'location');
             locations = locationsInfo;
         },
         error: (err) => {
@@ -107,16 +100,19 @@ const getAllContainingSearch = (searchTerm) => {
             searchTerm: searchTerm
         },
         success: function (result) {
+            console.log(result);
+            if (result.data.length < 1) {
+                $('#noResults').modal();
+            }
             let employeeList = result.data;
             let employees = [];
             for (i = 0; i < employeeList.length; i++) {
                 let formattedEmployee = employeesFormatter(employeeList[i]);
                 employees.push(formattedEmployee);
             }
-            $('#employeeList').empty();
             results = employees;
             // Compiling results using handlebars
-            document.getElementById('employeeList').insertAdjacentHTML('beforeend', (renderResults({ employees: employees })));
+            $('#handlebars').html(renderEmployees({ employees: employees }));
         },
         error: (err) => {
             console.log(err);
@@ -270,7 +266,6 @@ const deleteEmployee = (id) => {
             id: id
         },
         success: function (result) {
-            console.log(result);
             $('#successText').html(`${result.data.firstName} ${result.data.lastName} deleted`);
             $('#noDelete').click();
             $('#closeContactDelete').click();
@@ -293,13 +288,12 @@ const updateLocation = () => {
         type: 'POST',
         datatype: 'JSON',
         data: {
-            id: $('#manageLocationSelect option:selected').val(),
+            id: $('#updateLocationID').val(),
             locationName: $('#updateLocationName').val()
         },
         success: function (result) {
             $('#successText').html(result.data);
             $('#successModal').modal();
-            $('#manageModal .btn-danger').click();
         },
         error: (err) => {
             console.log(err);
@@ -314,15 +308,13 @@ const updateDepartment = () => {
         type: 'POST',
         datatype: 'JSON',
         data: {
-            id: $('#manageDepartmentSelect option:selected').val(),
+            id: $('#departmentID').val(),
             departmentName: $('#editDepartmentName').val(),
-            originalName: $('#manageDepartmentSelect option:selected').html(),
             locationID: $('#changeLocationSelect option:selected').val()
         },
         success: function (result) {
             $('#successText').html(result.data);
             $('#successModal').modal();
-            $('#manageModal .btn-danger').click();
         },
         error: (err) => {
             console.log(err);
@@ -346,8 +338,6 @@ const updateEmployee = () => {
         success: function (result) {
             $('#successText').html(result.data);
             $('#successModal').modal();
-            $('#contactDisplayModal .btn-danger').click();
-            $('#manageModal .btn-danger').click();
         },
         error: (err) => {
             console.log(err);
@@ -357,35 +347,9 @@ const updateEmployee = () => {
 
 /***************** FUNCTIONS *******************/
 
-// Adds checkboxes to the DOM with ID values, used in advanced searh Modal
-const checkboxAdderWithID = (container, array, param, nameParam) => {
-    array.forEach(function (item) {
-        if (item !== item) {
-            let newDiv = $(document.createElement('div')).prop({
-                class: "form-check"
-            });
-            container.append(newDiv);
-            newDiv.append(
-                $(document.createElement('input')).prop({
-                    id: nameParam + "ID " + item.id,
-                    name: nameParam,
-                    value: item.id,
-                    type: "checkbox",
-                    class: "form-check-input generate-check"
-                })
-            ).append(
-                $(document.createElement('label')).prop({
-                    for: nameParam,
-                    class: "form-check-label generate-check"
-                }).html(item[param])
-            )
-        }
-    })
-}
-
 // Gets the relevant URL for countries flag based on location returned from database
 const countryImageFinder = (object) => {
-    let location = object.location;
+    let location = object;
     let locationCode;
     let imageURL;
     switch (location) {
@@ -414,6 +378,19 @@ const countryImageFinder = (object) => {
     }
     return imageURL;
 }
+
+const departmentsFormatter = (object) => {
+    let department = {
+        id: object.id,
+        name: object.name,
+        location: object.locationObj.name,
+        locationID: object.locationID,
+        imageURL: countryImageFinder(object.locationObj.name),
+        countryImage: `${object.location} image`,
+    };
+    return department;
+}
+
 // Formats employees returned from database
 const employeesFormatter = (object) => {
     let employee = {
@@ -426,7 +403,7 @@ const employeesFormatter = (object) => {
         locationId: object.locationID,
         location: object.location,
         email: object.email,
-        imageURL: countryImageFinder(object),
+        imageURL: countryImageFinder(object.location),
         countryImage: `${object.location} image`,
         locationObj: {
             id: object.locationID,
@@ -454,6 +431,15 @@ const idFinder = (array, id) => {
     return found[0];
 }
 
+const locationsFormatter = (object) => {
+    let location = {
+        id: object.id,
+        name: object.name,
+        imageURL: countryImageFinder(object.name)
+    }
+    return location;
+}
+
 // Renders and opens the contact Display Modal
 const modalGenerator = (object) => {
     $('#employeeId').attr('value', object.id);
@@ -464,6 +450,12 @@ const modalGenerator = (object) => {
     document.getElementById("contactDepartmentSelect").value = object.departmentObj.id;
     document.getElementById("contactLocationSelect").value = object.locationObj.id;
     $('#contactDisplayModal').modal();
+}
+
+// Formats name given back from database
+const nameFormatter = (object) => {
+    let nameString = `${object.firstName} ${object.lastName}`;
+    return nameString;
 }
 
 // Fills a Select from an array
@@ -560,13 +552,6 @@ $(document).ready(function () {
 
 /************* JQuery helper Functions ***************/
 
-// Resets all the checkboxes accross all Forms
-const checkboxFormResetter = () => {
-    $('.resetChecks :input[type=radio]').prop('checked', false);
-    $('.resetChecks .focusedInput').prop('disabled', true);
-    $('.resetChecks .focusedInput').prop('selectedIndex', 0);
-}
-
 // Allows the user to edit inputs
 const formEditor = () => {
     $('#editModalForm').prop('disabled', false);
@@ -583,18 +568,112 @@ const formDisabler = () => {
 
 /******************** JQuery Events **********************/
 
-///////////// Contact Display Modal ///////////////////
-
+/////////// Adding Buttons To The DOM & Firing Events /////////////////
 // Adding View button from template to the DOM
 $('#team').on('click', '#viewButton', function () {
     let parents = $(this).parents();
-    console.log(parents);
     let topLevel = parents[5];
-    console.log(topLevel);
     let id = topLevel.id;
-    console.log(id);
     let employee = idFinder(results, id);
     modalGenerator(employee);
+});
+
+// Adding edit Location Button to the DOM
+$('#team').on('click', '#editLocationButton', function () {
+    let parents = $(this).parents();
+    let topLevel = parents[5];
+    let id = topLevel.id;
+    let location = idFinder(locations, id);
+    $('#updateLocationName').prop("placeholder", location.name);
+    $('#updateLocationID').val(location.id);
+    $('#manageLocationModal').modal();
+});
+
+// Adding edit Location Button to the DOM for small screen sizes
+$('#team').on('click', '#editLocationButtonMobile', function () {
+    let parents = $(this).parents();
+    let parent = parents[1];
+    let target = parent.children[0].id;
+    let id = target.substring(1);
+    let location = idFinder(locations, id);
+    $('#updateLocationName').prop("placeholder", location.name);
+    $('#updateLocationID').val(location.id);
+    $('#manageLocationModal').modal();
+});
+
+// Adding delete location Button to the DOM for small screen sizes
+$('#team').on('click', '#deleteLocationButtonMobile', function () {
+    let parents = $(this).parents();
+    let parent = parents[1];
+    let target = parent.children[0].id;
+    let id = target.substring(1);
+    let location = idFinder(locations, id);
+    $('#deleteItemID').val(location.id);
+    $('#deleteTrigger').val(`location`);
+    $('#deleteItem').html(location.name);
+    $('#deleteWarning').modal();
+});
+
+// Adding delete location Button to the DOM
+$('#team').on('click', '#deleteLocationButton', function () {
+    let parents = $(this).parents();
+    let topLevel = parents[5];
+    let id = topLevel.id;
+    let location = idFinder(locations, id);
+    $('#deleteItemID').val(location.id);
+    $('#deleteTrigger').val(`location`);
+    $('#deleteItem').html(location.name);
+    $('#deleteWarning').modal();
+});
+
+// Adding edit Department Button to the DOM
+$('#team').on('click', '#editDepartmentButton', function () {
+    let parents = $(this).parents();
+    let topLevel = parents[5];
+    let id = topLevel.id;
+    let department = idFinder(departments, id);
+    $('#editDepartmentName').val(department.name);
+    $('#departmentID').val(department.id);
+    document.getElementById('changeLocationSelect').value = department.locationID;
+    $('#manageDepartmentModal').modal();
+});
+
+// Adding edit Department Button to the DOM for small screen sizes
+$('#team').on('click', '#editDepartmentButtonMobile', function () {
+    let parents = $(this).parents();
+    let parent = parents[1];
+    let target = parent.children[0].id;
+    let id = target.substring(1);
+    let department = idFinder(departments, id);
+    $('#editDepartmentName').val(department.name);
+    $('#departmentID').val(department.id);
+    document.getElementById('changeLocationSelect').value = department.locationID;
+    $('#manageDepartmentModal').modal();
+});
+
+// Adding Delete Department Button to the DOM 
+$('#team').on('click', '#deleteDepartmentButton', function () {
+    let parents = $(this).parents();
+    let topLevel = parents[5];
+    let id = topLevel.id;
+    let department = idFinder(departments, id);
+    $('#deleteItemID').val(department.id);
+    $('#deleteTrigger').val(`department`);
+    $('#deleteItem').html(department.name);
+    $('#deleteWarning').modal();
+});
+
+// Adding Delete Department Button to the DOM for small screen sizes
+$('#team').on('click', '#deleteDepartmentButtonMobile', function () {
+    let parents = $(this).parents();
+    let parent = parents[1];
+    let target = parent.children[0].id;
+    let id = target.substring(1);
+    let department = idFinder(departments, id);
+    $('#deleteItemID').val(department.id);
+    $('#deleteTrigger').val(`department`);
+    $('#deleteItem').html(department.name);
+    $('#deleteWarning').modal();
 });
 
 // Adding View button from template to the DOM for Mobile Cards
@@ -622,7 +701,6 @@ $('#team').on('click', '#deleteButton', function () {
     let topLevel = parents[5];
     let id = topLevel.id;
     let employee = idFinder(results, id);
-    console.log(employee);
     $('#deleteContactItem').html(employee.fullName);
     $('#deleteContactId').val(employee.id);
     $('#contactDeleteWarning').modal();
@@ -633,16 +711,88 @@ $('#editButtonModal').click(function () {
     formEditor();
 });
 
-// Deletes the employee clicked on by the user
+/****************** Nav Buttons *************************/
+// Renders the locations handlebars template
+$('#locationButton').click(function () {
+    formattedLocations = [];
+    locations.forEach(function (item) {
+        formattedLocations.push(locationsFormatter(item));
+    });
+    locations = formattedLocations;
+    $('#handlebars').html(renderLocations({ locations: locations }));
+    $('#title').html('LOCATIONS');
+});
+
+// Renders Department Handlebars template
+$('#departmentButton').click(function () {
+    let formattedDepartments = [];
+    departments.forEach(function (item) {
+        let locateObj = idFinder(locations, item.locationID);
+        item.locationObj = {
+            id: locateObj.id,
+            name: locateObj.name
+        };
+        formattedDepartments.push(departmentsFormatter(item))
+    });
+    departments = formattedDepartments;
+    $('#handlebars').html(renderDepartments({ departments: departments }));
+    $('#title').html('DEPARTMENTS');
+});
+
+// Renders the Employee Handlebars template
+$('#employeeButton').click(function () {
+    let searchTerm = "";
+    $('#simpleSearch').val(null);
+    //$('#handlebars').html(renderEmployees({ employees: employees }));
+    $('#title').html('TEAM');
+    getAll();
+});
+
+// Opens New Modal when add new button is clicked
+$('#addNewButton').click(function () {
+    if ($('#title').html() === 'TEAM') {
+        $('#newEmployeeModal').modal();
+    } else if ($('#title').html() === 'LOCATIONS') {
+        $('#newLocationModal').modal();
+    } else if ($('#title').html() === 'DEPARTMENTS') {
+        $('#newDepartmentModal').modal();
+    }
+});
+
+//////////////////////////////////// Delete Modals ////////////////////////////////////
+// Deletes either department or location depending on deleteTrigger value from delete Modal
+$('#fireDelete').click(function () {
+    if ($('#deleteTrigger').val() === 'location') {
+        deleteLocation($('#deleteItemID').val());
+    } else if ($('#deleteTrigger').val() === 'department') {
+        deleteDepartment($('#deleteItemID').val());
+    }
+});
+
+// Deletes the employee
+$('#fireContactDelete').click(function () {
+    deleteEmployee($('#deleteContactId').val());
+});
+
+// Brings up delete warning modal from delete Modal button
 $('#deleteButtonModal').click(function () {
     $('#deleteContactItem').html($('#fullName').val());
     $('#deleteContactId').val($('#employeeId').val());
     $('#contactDeleteWarning').modal();
 });
 
-$('#fireContactDelete').click(function () {
-    deleteEmployee($('#deleteContactId').val());
-    //$('#closeContactDelete').click();
+// If user says don't delete on warning screen it closes
+$('#noDelete').click(function () {
+    $('#deleteWarning').modal('hide');
+});
+
+//////////////////////// Update Modals //////////////////////////////////////
+
+// Unblocks Department edit Form
+$('#editDepartmentNameButton').click(function () {
+    $('#editDepartmentName').prop('disabled', false);
+    $('#changeLocationSelect').prop('disabled', false);
+    $('#updateDepartmentSubmitButton').prop('disabled', false);
 });
 
 // Updates the database with user changes to employee
@@ -650,140 +800,35 @@ $('#saveEdits').click(function () {
     updateEmployee();
 });
 
-//////////////////////////////////// Delete Modal ////////////////////////////////////
-
-// Opens the delete modal when delete button is clicked
-$('#deleteOfficeButton').click(function () {
-    $('#deleteOfficeModal').modal();
+// On keyup allows the submission button
+$('#updateLocationName').keyup(function () {
+    $('#updateLocationSubmitButton').prop('disabled', false);
 });
 
-// Enables the submit button for deleting a location
-$('#deleteOfficeModalForm select').on('change', function () {
-    if ($('#deleteOfficeModalForm select.focusedInput').val() !== 'Choose...') {
-        $('#submitDelete').prop('disabled', false);
-    } else {
-        $('#submitDelete').prop('disabled', true);
-    }
+// Updates the Location
+$('#updateLocationSubmitButton').click(function () {
+    updateLocation();
+    $('#updateLocationClose').click();
 });
 
-
-// Handles which type of delete is sent to the database
-$('#submitDelete').click(function () {
-    if ($('#person').prop("checked")) {
-        $('#deleteItem').html($('#employeeSelect option:selected').html());
-        $('#deleteWarning').modal();
-    } else if ($('#department').prop("checked")) {
-        $('#deleteItem').html($('#departments option:selected').html());
-        $('#deleteWarning').modal();
-    } else if ($('#deleteLocation').prop("checked")) {
-        $('#deleteItem').html($('#branches option:selected').html());
-        $('#deleteWarning').modal();
-    }
-});
-
-$('#fireDelete').click(function () {
-    if ($('#person').prop("checked")) {
-        deleteEmployee($('#employeeSelect option:selected').val());
-    } else if ($('#department').prop("checked")) {
-        deleteDepartment($('#departments option:selected').val());
-    } else if ($('#deleteLocation').prop("checked")) {
-        deleteLocation($('#branches option:selected').val());
-    }
-});
-
-$('#noDelete').click(function () {
-    $('#deleteWarning').modal('hide');
-    $('#deleteOfficeModal').modal('hide');
-});
-
-///////////////////////// Advanced Search Modal //////////////////////////////
-
-// Opens advanced search modal when advanced search button is clicked
-$('#advancedSearchButton').click(function () {
-    $('#advancedSearchModal').modal();
-});
-
-//////////////////////// Manage Modal //////////////////////////////////////
-
-// Opens Manage modal when manage modal button is clicked
-$('#manageOfficeButton').click(function () {
-    $('#manageModal').modal();
-});
-
-// Handles what happens when checkboxes are clicked 
-$('#manageModal .form-check-input').click(function () {
-    $('#manageSubmitButton').prop('disabled', true);
-    $('#changeLocationSelect').prop('disabled', true);
-    $('#manageModal input.inputClear').val(null).prop('disabled', true);
-    $('#manageModal select.selectBeginning').prop('selectedIndex', 0);
-    //$('#newEntryModal input.dependantInput').trigger(':reset');
-});
-
-// When employee is selected from dropdown it generates and opens contact display modal to be edited
-$('#manageEmployeeSelect').change(function () {
-    let employeeId = $('#manageEmployeeSelect option:selected').val();
-    let employee = idFinder(results, employeeId);
-    modalGenerator(employee);
-    formEditor();
-});
-
-// Handles how user can update Location
-$('#manageLocationSelect').change(function () {
-    $('#updateLocationName').prop('disabled', false).focus();
-    $('#updateLocationName').keyup(function () {
-        $('#manageSubmitButton').prop('disabled', false);
-    });
-});
-
-// Handles how user can update Department
-$('#manageDepartmentSelect').change(function () {
-    $('#editDepartmentName').prop('disabled', false);
-    $('#changeLocationSelect').prop('disabled', false).focus();
-    $('#changeLocationSelect').change(function () {
-        $('#manageSubmitButton').prop('disabled', false);
-    });
-});
-
-// Ensures submit button is disabled until other inputs are filled by user
-$('#manageModal .form-check-input').click(function () {
-    $('#manageSubmitButton').prop('disabled', true);
-});
-
-// Handles which update type is sent to the Database
-$('#manageSubmitButton').click(function () {
-    if ($('#manageLocation').prop("checked")) {
-        updateLocation();
-    } else if ($('#manageDepartment').prop("checked")) {
-        updateDepartment();
-    }
+// Updates the Department
+$('#updateDepartmentSubmitButton').click(function () {
+    updateDepartment();
+    $('#updateDepartmentClose').click();
 });
 
 ///////// New Item Modal //////////////
 
-// Opens New Modal when add new button is clicked
-$('#addNewButton').click(function () {
-    $('#newEntryModal').modal();
-});
-
-// Handles what happens when checkboxes are clicked 
-$('#newEntryModal .form-check-input').click(function () {
-    $('#newSubmitButton').prop('disabled', true);
-    $('#newLocationSelect').prop('disabled', true);
-    $('#newEntryModal input.inputClear').val(null);
-    $('#newEntryModal select.selectBeginning').prop('selectedIndex', 0);
-    $('#newEntryModal input.dependantInput').trigger(':reset');
-});
-
 // Handles how user can enter New Location Form
 $('#locationNewInput').keyup(function () {
-    $('#newSubmitButton').prop('disabled', false);
+    $('#newLocationSubmitButton').prop('disabled', false);
 });
 
 // Handles how user can enter New Department Form
 $('#departmentNewInput').keyup(function () {
     $('#newLocationSelect').prop('disabled', false);
     $('#newLocationSelect').change(function () {
-        $('#newSubmitButton').prop('disabled', false);
+        $('#newDepartmentSubmitButton').prop('disabled', false);
     });
 });
 
@@ -813,24 +858,32 @@ $('#contactDepartmentSelect').change(function () {
     getLocationFromDepartmentID(id);
 });
 
-// Decides which type of Create is sent to the Database
+// Adds new Employee
 $('#newSubmitButton').click(function () {
-    if ($('#personNew').prop("checked")) {
-        addNewEmployee();
-    } else if ($('#departmentNew').prop("checked")) {
-        addNewDepartment();
-    } else if ($('#locationNew').prop("checked")) {
-        addNewLocation();
-    }
+    addNewEmployee();
+    $('#closeNewEmployee').click();
+});
+
+// Adds new Department
+$('#newDepartmentSubmitButton').click(function () {
+    addNewDepartment();
+    $('#closeNewDepartment').click();
+});
+
+// Adds new Location
+$('#newLocationSubmitButton').click(function () {
+    addNewLocation();
+    $('#closeNewLocation').click();
 });
 
 /////////////////////// Simple Search ////////////////////////////////////////////////
-
+// Fires get all containg value in search box on click
 $('#simpleSearchButton').click(function () {
     let searchTerm = $('#simpleSearch').val();
     getAllContainingSearch(searchTerm);
 });
 
+// Fires get all containg value in search box on enter key
 $('#simpleSearch').keypress(function (e) {
     if (e.which == 13) {
         e.preventDefault();
@@ -838,47 +891,7 @@ $('#simpleSearch').keypress(function (e) {
     }
 });
 
-$('#refresh').click(function () {
-    let searchTerm = "";
-    $('#simpleSearch').val(null);
-    getAllContainingSearch(searchTerm);
-});
-
 /////////////////////// Events accross multiple Modals ///////////////////////////////
-
-// Handling the checkboxes behaviour in Forms 
-$('.locationCheck').click(function () {
-    $('.locations').prop('disabled', false);
-    $('.locations').focus();
-    $('.locations').addClass('focusedInput');
-    $('.departments').prop('disabled', true);
-    $('.departments').removeClass('focusedInput').prop('selectedIndex', 0);;
-    $('.employees').prop('disabled', true);
-    $('.employees').removeClass('focusedInput').prop('selectedIndex', 0);
-    $('.submitButton').prop('disabled', true);
-});
-
-$('.departmentCheck').click(function () {
-    $('.departments').prop('disabled', false);
-    $('.departments').focus();
-    $('.departments').addClass('focusedInput');
-    $('.locations').prop('disabled', true);
-    $('.locations').removeClass('focusedInput').prop('selectedIndex', 0);;
-    $('.employees').prop('disabled', true);
-    $('.employees').removeClass('focusedInput').prop('selectedIndex', 0);
-    $('.submitButton').prop('disabled', true);
-});
-
-$('.personCheck').click(function () {
-    $('.employees').prop('disabled', false);
-    $('.employees').focus();
-    $('.employees').addClass('focusedInput');
-    $('.locations').prop('disabled', true);
-    $('.locations').removeClass('focusedInput').prop('selectedIndex', 0);
-    $('.departments').prop('disabled', true);
-    $('.departments').removeClass('focusedInput').prop('selectedIndex', 0);
-    $('.submitButton').prop('disabled', true);
-});
 
 // Used to render a location once a department is selected
 $('.dependantSelect').change(function () {
@@ -887,45 +900,40 @@ $('.dependantSelect').change(function () {
 });
 
 /////////////////////////////// Modal Close Events ////////////////////////////////////
-
-// Resets Everything on close of a modal
-$('.modal').on('hide.bs.modal', function () {
-    formDisabler();
-    $('.modal-body').scrollTop(0);
-    checkboxFormResetter();
-    results.splice(0, results.length);
-    departments.splice(0, departments.length);
-    locations.splice(0, locations.length);
-    $('#newContactLocation').attr('value', '');
-    $('select option:not(.first)').remove();
-    $('#employeeList').empty();
-    $('.generate-check').remove();
-    $('#simpleSearch').val(null);
-    $('#departmentCheckboxes').empty();
-    $('#newSubmitButton').prop('disabled', true);
-    $('#manageModal input.inputClear').val(null).prop('disabled', true);
-    $('#manageModal select.selectBeginning').prop('selectedIndex', 0).prop('disabled', true);
-    $('#newEntryModal input.inputClear').val(null).prop('disabled', true);
-    $('#newEntryModal select.selectBeginning').prop('selectedIndex', 0).prop('disabled', true);
-    $('#newEntryModal input.dependantInput').trigger(':reset');
-    $(document).scrollTop(0);
-    getAll();
-    getDepartments();
-    getLocations();
+// Reloads page when contact Display Modal is closed
+$('#contactDisplayModal').on('hide.bs.modal', function () {
+    document.location.reload();
 });
 
-// Used when editing an employee through the manage modal to close both modals at once
-$('#contactDisplayModal').on('hidden.bs.modal', function () {
-    if ($('#manageModal').hasClass('show')) {
-        $('#dismissButton').click();
-    }
-    $('.generate-check').remove();
+// Reloads page when success modal closes and anything in the database has been changed
+$('#successModal').on('hide.bs.modal', function () {
+    document.location.reload();
 });
 
-$('#contactDeleteWarning').on('hide.bs.modal', function () {
-    if ($('#contactDisplayModal').hasClass('show')) {
-        $('#contactDisplayModal').modal('hide');
-    }
-    $('.generate-check').remove();
+// Reloads page when no results from simple search modal closes
+$('#noResults').on('hide.bs.modal', function () {
+    document.location.reload();
 });
 
+// Clears and resets the manage department modal
+$('#manageDepartmentModal').on('hide.bs.modal', function () {
+    $('#manageDepartmentModal input.inputClear').val(null).prop('disabled', true);
+    $('#manageDepartmentModal select').prop('disabled', true);
+    $('#updateDepartmentSubmitButton').prop('disabled', true);
+});
+
+// Clears and resets the manage location modal
+$('#manageLocationModal').on('hide.bs.modal', function () {
+    $('#manageLocationModal input.inputClear').val(null);
+    $('#updateLocationSubmitButton').prop('disabled', true);
+});
+
+// Clears and resets the new item modals
+$('.newModal').on('hide.bs.modal', function () {
+    $('.newModal input.inputClear').val(null);
+    $('.newModal .btn-primary').prop('disabled', true);
+    $('.newModal input.disable').prop('disabled', true);
+    $('.newModal select.disable').prop('disabled', true);
+    $('.newModal select.selectBeginning').prop('selectedIndex', 0);
+    $('.newModal input.dependantInput').attr('value', "");
+});

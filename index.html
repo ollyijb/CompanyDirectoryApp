@@ -17,10 +17,10 @@
 <body>
     <!-- Nav -->
     <nav class="navbar sticky-top navbar-light bg-light">
-        <div class="container-fluid">
+        <div class="d-flex">
 
-            <button class="btn btn-primary" id="employeeButton">
-                <i class="fa fa-user fa-lg"></i>
+            <button class="btn btn-success navButton" id="addNewButton">
+                <i class="fa fa-plus fa-lg"></i>
             </button>
 
             <div class="d-flex col-6" id="simpleForm">
@@ -30,16 +30,16 @@
                     <i class="fa fa-search fa-lg"></i>
                 </button>
             </div>
-
-            <button class="btn btn-info" id="locationButton">
+            <button class="btn btn-primary navButton" id="employeeButton">
+                <i class="fa fa-user fa-lg"></i>
+            </button>
+            <button class="btn btn-info navButton" id="locationButton">
                 <i class="fa fa-plane fa-lg"></i>
             </button>
-            <button class="btn btn-dark" id="departmentButton">
+            <button class="btn btn-dark navButton" id="departmentButton">
                 <i class="fa fa-institution fa-lg"></i>
             </button>
-            <button class="btn btn-success" id="addNewButton">
-                <i class="fa fa-plus fa-lg"></i>
-            </button>
+
         </div>
     </nav>
 
@@ -286,12 +286,12 @@
                         <div class="card d-block d-sm-none container mobileCard" id="mobileDepartmentCard">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between">
-                                    <h4 class="" id="D{{id}}">{{name}}</h4>
+                                    <h4 class="mobileHeader" id="D{{id}}">{{name}}</h4>
                                     <div id="buttonContainerMobile">
-                                        <button class="btn btn-primary edit" id="editDepartmentButtonMobile">
+                                        <button class="btn btn-primary edit mobileButton" id="editDepartmentButtonMobile">
                                             <i class="fa fa-pencil fa-lg"></i>
                                         </button>
-                                        <button class="btn btn-danger delete" id="deleteDepartmentButtonMobile">
+                                        <button class="btn btn-danger delete mobileButton" id="deleteDepartmentButtonMobile">
                                             <i class="fa fa-trash fa-lg"></i>
                                         </button>
                                     </div>

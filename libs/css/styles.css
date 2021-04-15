@@ -156,5 +156,28 @@ section .section-title {
     float: right;
 }
 
+.mobileHeader {
+    max-width: 260px !important;
+}
+
+#buttonContainerMobile {
+    min-width: 92px;
+}
+
+@media (min-width: 576px) {
+    nav .d-flex{
+
+    justify-content: space-between;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    }
+    nav button {
+        margin: 0 0.5rem !important;
+    }
+}
+
 
 

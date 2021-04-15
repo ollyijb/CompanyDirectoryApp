@@ -26,8 +26,8 @@ const getAll = () => {
             }
             results = employees;
             $('#handlebars').html(renderEmployees({ employees: employees }));
-            let people = uniqueEmployeePairs(results);
-            optionAdderWithID($('.employeesSelect'), people, 'fullName', 'fullName');
+            //let people = uniqueEmployeePairs(results);
+            //optionAdderWithID($('.employeesSelect'), people, 'fullName', 'fullName');
         }, error: (err) => {
             console.log(err);
         }
@@ -903,6 +903,7 @@ $('.dependantSelect').change(function () {
 // Reloads page when contact Display Modal is closed
 $('#contactDisplayModal').on('hide.bs.modal', function () {
     document.location.reload();
+    //getAll();
 });
 
 // Reloads page when success modal closes and anything in the database has been changed

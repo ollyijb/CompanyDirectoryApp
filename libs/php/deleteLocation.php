@@ -34,12 +34,12 @@
 	}	
 
 	// $_REQUEST used for development / debugging. Remember to cange to $_POST for production
-    $ifQuery = 'SELECT * FROM department WHERE locationID = ' . $_POST['id'];
+    //$ifQuery = 'SELECT * FROM department WHERE locationID = ' . $_POST['id'];
 
 
 	//$query = 'DELETE FROM department WHERE id = ' . $_POST['id'];
 
-	$result = $conn->query($ifQuery);
+	/* $result = $conn->query($ifQuery);
 	
 	if (!$result) {
 
@@ -77,38 +77,38 @@
 
         exit;
 
-    } else {
+    } *//*  else { */
 
-		$getQuery = 'Select name FROM location WHERE id = ' . $_POST['id'];
+	$getQuery = 'Select name FROM location WHERE id = ' . $_POST['id'];
 
-		$result = $conn->query($getQuery);
+	$result = $conn->query($getQuery);
 
-		if (!$result) {
+	if (!$result) {
 
-			$output['status']['code'] = "400";
-			$output['status']['name'] = "executed";
-			$output['status']['description'] = "query failed";	
-			$output['data'] = [];
-	
-			mysqli_close($conn);
-	
-			echo json_encode($output); 
-	
-			exit;
-	
-		}
-	
-		$data = [];
-	
-		while ($row = mysqli_fetch_assoc($result)) {
-	
-			array_push($data, $row);
-	
-		}
+		$output['status']['code'] = "400";
+		$output['status']['name'] = "executed";
+		$output['status']['description'] = "query failed";	
+		$output['data'] = [];
 
-        $query = 'DELETE FROM location WHERE id = ' . $_POST['id'];
+		mysqli_close($conn);
 
-        $result = $conn->query($query);
+		echo json_encode($output); 
+
+		exit;
+
+	}
+
+	$data = [];
+
+	while ($row = mysqli_fetch_assoc($result)) {
+
+		array_push($data, $row);
+
+	}
+
+	$query = 'DELETE FROM location WHERE id = ' . $_POST['id'];
+
+	$result = $conn->query($query);
 	
 	if (!$result) {
 
@@ -126,18 +126,18 @@
 	}
 
 
-        $output['status']['code'] = "200";
-        $output['status']['name'] = "Delete";
-        $output['status']['description'] = "success";
-        $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-        $output['data'] = $data[0]['name'];
-        $output['custom'] = 'Free to Delete';
-        mysqli_close($conn);
+	$output['status']['code'] = "200";
+	$output['status']['name'] = "Delete";
+	$output['status']['description'] = "success";
+	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+	$output['data'] = $data[0]['name'];
+	$output['custom'] = 'Free to Delete';
+	mysqli_close($conn);
 
-        echo json_encode($output); 
+	echo json_encode($output); 
 
-        exit;
-    }
+	exit;
+    
 
 	//$output['status']['code'] = "200";
 	//$output['status']['name'] = "ok";

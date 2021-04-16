@@ -191,8 +191,39 @@ const addNewEmployee = () => {
 }
 
 /******************** AJAX DELETES ******************/
+// Checks to see if there are any Dependants to protect Data from being deleted
+const checkDepartmentDependants = (id) => {
+    $.ajax({
+        url: 'libs/php/checkDepartmentDependants.php',
+        type: 'POST',
+        datatype: 'JSON',
+        data: {
+            id: id
+        },
+        success: function (result) {
+            if (result.status.code === "409") {
+                $('#dependantsReason').html(`Can't delete as you have the following employees working there`);
+                $('#noDelete').click();
+                result.data.forEach(function (item) {
+                    let name = item.firstName + " " + item.lastName;
+                    $('#dependantsList').append('<li>' + name + '</li>');
+                });
+                $('#dependantsModal').modal();
+                $('#deleteOfficeModal .btn-danger').click();
+            } else {
+                $('#deleteItemID').val(result.id);
+                $('#deleteTrigger').val(`department`);
+                $('#deleteItem').html(result.data);
+                $('#deleteWarning').modal();
+            }
 
-// Deletes Department from an ID if no dependants, alerts user if there are
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    });
+}
+// Deletes Department from an ID 
 const deleteDepartment = (id) => {
     $.ajax({
         url: 'libs/php/deleteDepartment.php',
@@ -206,15 +237,6 @@ const deleteDepartment = (id) => {
                 $('#successText').html(`${result.data} deleted`);
                 $('#noDelete').click();
                 $('#successModal').modal();
-                $('#deleteOfficeModal .btn-danger').click();
-            } else {
-                $('#dependantsReason').html(`Can't delete as you have the following employees working there`);
-                $('#noDelete').click();
-                result.data.forEach(function (item) {
-                    let name = item.firstName + " " + item.lastName;
-                    $('#dependantsList').append('<li>' + name + '</li>');
-                });
-                $('#dependantsModal').modal();
                 $('#deleteOfficeModal .btn-danger').click();
             }
         },
@@ -239,7 +261,25 @@ const deleteLocation = (id) => {
                 $('#noDelete').click();
                 $('#successModal').modal();
                 $('#deleteOfficeModal .btn-danger').click();
-            } else {
+            }
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    });
+}
+
+// Checks to see if there are any Dependants to protect Data from being deleted
+const checkLocationDependants = (id) => {
+    $.ajax({
+        url: 'libs/php/checkLocationDependants.php',
+        type: 'POST',
+        datatype: 'JSON',
+        data: {
+            id: id
+        },
+        success: function (result) {
+            if (result.status.code === "409") {
                 $('#dependantsReason').html(`Can't delete as you have the following departments based there`);
                 $('#noDelete').click();
                 result.data.forEach(function (item) {
@@ -248,7 +288,13 @@ const deleteLocation = (id) => {
                 });
                 $('#dependantsModal').modal();
                 $('#deleteOfficeModal .btn-danger').click();
+            } else {
+                $('#deleteItemID').val(result.id);
+                $('#deleteTrigger').val(`location`);
+                $('#deleteItem').html(result.data);
+                $('#deleteWarning').modal();
             }
+
         },
         error: (err) => {
             console.log(err);
@@ -608,10 +654,7 @@ $('#team').on('click', '#deleteLocationButtonMobile', function () {
     let target = parent.children[0].id;
     let id = target.substring(1);
     let location = idFinder(locations, id);
-    $('#deleteItemID').val(location.id);
-    $('#deleteTrigger').val(`location`);
-    $('#deleteItem').html(location.name);
-    $('#deleteWarning').modal();
+    checkLocationDependants(location.id);
 });
 
 // Adding delete location Button to the DOM
@@ -620,10 +663,7 @@ $('#team').on('click', '#deleteLocationButton', function () {
     let topLevel = parents[5];
     let id = topLevel.id;
     let location = idFinder(locations, id);
-    $('#deleteItemID').val(location.id);
-    $('#deleteTrigger').val(`location`);
-    $('#deleteItem').html(location.name);
-    $('#deleteWarning').modal();
+    checkLocationDependants(location.id);
 });
 
 // Adding edit Department Button to the DOM
@@ -657,10 +697,7 @@ $('#team').on('click', '#deleteDepartmentButton', function () {
     let topLevel = parents[5];
     let id = topLevel.id;
     let department = idFinder(departments, id);
-    $('#deleteItemID').val(department.id);
-    $('#deleteTrigger').val(`department`);
-    $('#deleteItem').html(department.name);
-    $('#deleteWarning').modal();
+    checkDepartmentDependants(department.id);
 });
 
 // Adding Delete Department Button to the DOM for small screen sizes
@@ -670,10 +707,7 @@ $('#team').on('click', '#deleteDepartmentButtonMobile', function () {
     let target = parent.children[0].id;
     let id = target.substring(1);
     let department = idFinder(departments, id);
-    $('#deleteItemID').val(department.id);
-    $('#deleteTrigger').val(`department`);
-    $('#deleteItem').html(department.name);
-    $('#deleteWarning').modal();
+    checkDepartmentDependants(department.id);
 });
 
 // Adding View button from template to the DOM for Mobile Cards
@@ -937,4 +971,8 @@ $('.newModal').on('hide.bs.modal', function () {
     $('.newModal select.disable').prop('disabled', true);
     $('.newModal select.selectBeginning').prop('selectedIndex', 0);
     $('.newModal input.dependantInput').attr('value', "");
+});
+
+$('#dependantsModal').on('hide.bs.modal', function () {
+    $('#dependantsList').empty();
 });
